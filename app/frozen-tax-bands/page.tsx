@@ -65,7 +65,7 @@ export default function FrozenTaxBands() {
   ];
 
   const calculateTaxData = (salary: number) => {
-    const impacts: { [key: number]: { 2015: number; 2018: number; 2021: number; 2024: number; 2026: number } } = {
+    const impacts: { [key: number]: { [key: number]: number } } = {
       30000: { 2015: 0, 2018: 50, 2021: 100, 2024: 800, 2026: 1507 },
       45000: { 2015: 0, 2018: 100, 2021: 200, 2024: 1000, 2026: 1507 },
       60000: { 2015: 0, 2018: 200, 2021: 400, 2024: 3000, 2026: 5903 },
@@ -76,8 +76,28 @@ export default function FrozenTaxBands() {
     return impacts[salary] || impacts[60000];
   };
 
+  const getGraphDataPoints = (salary: number, projectionYears: 0 | 5 | 10) => {
+    const taxData = calculateTaxData(salary);
+    const historicalYears = [2015, 2018, 2021, 2024, 2026];
+    const historicalValues = historicalYears.map(year => taxData[year as keyof typeof taxData] || 0);
+
+    if (projectionYears === 0) {
+      return { years: historicalYears, values: historicalValues };
+    }
+
+    // Project forward assuming annual tax burden increases at current rate
+    const annualIncrease = (taxData[2026] - taxData[2024]) / 2; // ~1.5 years of increase
+    const futureYears = [2026, 2031, 2036].slice(0, projectionYears === 5 ? 2 : 3);
+    const futureValues = futureYears.map((year, idx) =>
+      taxData[2026] + (annualIncrease * (year - 2026) / 5)
+    );
+
+    return { years: historicalYears.concat(futureYears.slice(1)), values: historicalValues.concat(futureValues.slice(1)) };
+  };
+
   const taxData = calculateTaxData(selectedSalary);
   const stats = { cumulative: taxData[2026], annual: Math.round(taxData[2026] / 5), year: 2026 };
+  const graphData = getGraphDataPoints(selectedSalary, projectionYears);
 
   return (
     <main className="min-h-screen bg-white">
@@ -236,63 +256,81 @@ export default function FrozenTaxBands() {
 
             {/* Cumulative Tax Impact Graph */}
             <div className="mt-12 pt-8 border-t border-gray-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Cumulative Tax Impact Over Time</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Cumulative Tax Impact Since 2015</h3>
               <div className="bg-gray-50 border border-gray-200 rounded-xl p-8">
-                <svg viewBox="0 0 600 400" className="w-full h-auto">
+                <svg viewBox="0 0 700 400" className="w-full h-auto" style={{ minHeight: '300px' }}>
                   {/* Grid lines */}
                   {[0, 1, 2, 3, 4].map((i) => (
-                    <line key={`h-${i}`} x1="50" y1={350 - i * 70} x2="580" y2={350 - i * 70} stroke="#e5e7eb" strokeWidth="1" />
+                    <line key={`h-${i}`} x1="70" y1={350 - i * 70} x2="650" y2={350 - i * 70} stroke="#e5e7eb" strokeWidth="1" />
                   ))}
-                  {[0, 1, 2].map((i) => (
-                    <line key={`v-${i}`} x1={50 + i * 265} y1="350" x2={50 + i * 265} y2="30" stroke="#e5e7eb" strokeWidth="1" />
+                  {graphData.years.map((_, i) => (
+                    <line key={`v-${i}`} x1={70 + i * (580 / (graphData.years.length - 1))} y1="350" x2={70 + i * (580 / (graphData.years.length - 1))} y2="30" stroke="#e5e7eb" strokeWidth="1" />
                   ))}
 
                   {/* Axes */}
-                  <line x1="50" y1="350" x2="580" y2="350" stroke="#374151" strokeWidth="2" />
-                  <line x1="50" y1="350" x2="50" y2="30" stroke="#374151" strokeWidth="2" />
+                  <line x1="70" y1="350" x2="650" y2="350" stroke="#374151" strokeWidth="2" />
+                  <line x1="70" y1="350" x2="70" y2="30" stroke="#374151" strokeWidth="2" />
 
                   {/* Y-axis labels */}
                   {[0, 1, 2, 3, 4].map((i) => (
-                    <text key={`y-${i}`} x="40" y={355 - i * 70} textAnchor="end" className="text-xs fill-gray-600">
+                    <text key={`y-${i}`} x="60" y={358 - i * 70} textAnchor="end" fill="#4b5563" fontSize="12">
                       £{i * 5000}
                     </text>
                   ))}
 
-                  {/* X-axis labels */}
-                  {projectionYears === 0 && (
+                  {/* X-axis labels - years */}
+                  {graphData.years.map((year, idx) => (
+                    <text
+                      key={`year-${idx}`}
+                      x={70 + idx * (580 / (graphData.years.length - 1))}
+                      y="375"
+                      textAnchor="middle"
+                      fill="#4b5563"
+                      fontSize="12"
+                    >
+                      {year}
+                    </text>
+                  ))}
+
+                  {/* Data line and points */}
+                  {graphData.values.length > 0 && (
                     <>
-                      <text x="50" y="375" textAnchor="middle" className="text-xs fill-gray-600">0y</text>
-                    </>
-                  )}
-                  {projectionYears === 5 && (
-                    <>
-                      <text x="50" y="375" textAnchor="middle" className="text-xs fill-gray-600">0y</text>
-                      <text x="315" y="375" textAnchor="middle" className="text-xs fill-gray-600">2.5y</text>
-                      <text x="580" y="375" textAnchor="middle" className="text-xs fill-gray-600">5y</text>
-                    </>
-                  )}
-                  {projectionYears === 10 && (
-                    <>
-                      <text x="50" y="375" textAnchor="middle" className="text-xs fill-gray-600">0y</text>
-                      <text x="230" y="375" textAnchor="middle" className="text-xs fill-gray-600">5y</text>
-                      <text x="410" y="375" textAnchor="middle" className="text-xs fill-gray-600">10y</text>
-                      <text x="580" y="375" textAnchor="middle" className="text-xs fill-gray-600">10y</text>
+                      <polyline
+                        points={graphData.years
+                          .map((_, idx) => {
+                            const x = 70 + idx * (580 / (graphData.years.length - 1));
+                            const y = 350 - Math.min((graphData.values[idx] / 5000) * 70, 320);
+                            return `${x},${y}`;
+                          })
+                          .join(' ')}
+                        fill="none"
+                        stroke="#2563eb"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      {graphData.years.map((_, idx) => (
+                        <circle
+                          key={`point-${idx}`}
+                          cx={70 + idx * (580 / (graphData.years.length - 1))}
+                          cy={350 - Math.min((graphData.values[idx] / 5000) * 70, 320)}
+                          r="5"
+                          fill="#2563eb"
+                        />
+                      ))}
                     </>
                   )}
 
-                  {/* Data line */}
+                  {/* Freeze marker line - 2021 */}
                   {projectionYears === 0 && (
-                    <circle cx="50" cy={350 - (stats.cumulative / 5000) * 70} r="4" fill="#2563eb" />
-                  )}
-                  {projectionYears === 5 && (
-                    <polyline points={`50,350 315,${350 - (stats.cumulative * 0.5 / 5000) * 70} 580,${350 - (stats.cumulative / 5000) * 70}`} fill="none" stroke="#2563eb" strokeWidth="2" />
-                  )}
-                  {projectionYears === 10 && (
-                    <polyline points={`50,350 230,${350 - (stats.cumulative * 0.5 / 5000) * 70} 410,${350 - (stats.cumulative * 0.75 / 5000) * 70} 580,${350 - (stats.cumulative / 5000) * 70}`} fill="none" stroke="#2563eb" strokeWidth="2" />
+                    <>
+                      <line x1={70 + 2 * (580 / (graphData.years.length - 1))} y1="350" x2={70 + 2 * (580 / (graphData.years.length - 1))} y2="20" stroke="#ef4444" strokeWidth="2" strokeDasharray="4,4" opacity="0.5" />
+                      <text x={70 + 2 * (580 / (graphData.years.length - 1)) + 5} y="25" fill="#ef4444" fontSize="11" fontWeight="bold">Freeze began</text>
+                    </>
                   )}
                 </svg>
               </div>
-              <p className="text-gray-600 text-sm mt-4">This chart shows how the total extra tax burden accumulates over your selected time horizon for a £{(selectedSalary / 1000).toFixed(0)}k salary.</p>
+              <p className="text-gray-600 text-sm mt-4">Historical data shows cumulative extra tax paid since 2015 for a £{(selectedSalary / 1000).toFixed(0)}k salary. The red line marks April 2021 when thresholds were frozen. {projectionYears > 0 && `With current trajectory, this could reach £${(stats.cumulative + (projectionYears / 5) * stats.cumulative).toLocaleString()} in ${projectionYears} years.`}</p>
             </div>
           </div>
 

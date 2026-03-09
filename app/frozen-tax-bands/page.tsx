@@ -235,6 +235,15 @@ export default function FrozenTaxBands() {
             </div>
           </div>
 
+          {/* Analytics Image */}
+          <div className="mt-12 mb-12">
+            <img
+              src="/frozen-tax-analytics.jpg"
+              alt="Tax analytics dashboard"
+              className="w-full h-auto object-cover rounded-xl shadow-lg"
+            />
+          </div>
+
           {/* Why It Matters */}
           <div className="grid sm:grid-cols-2 gap-6">
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">

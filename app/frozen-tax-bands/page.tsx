@@ -233,6 +233,67 @@ export default function FrozenTaxBands() {
                 </div>
               </div>
             </div>
+
+            {/* Cumulative Tax Impact Graph */}
+            <div className="mt-12 pt-8 border-t border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Cumulative Tax Impact Over Time</h3>
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-8">
+                <svg viewBox="0 0 600 400" className="w-full h-auto">
+                  {/* Grid lines */}
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <line key={`h-${i}`} x1="50" y1={350 - i * 70} x2="580" y2={350 - i * 70} stroke="#e5e7eb" strokeWidth="1" />
+                  ))}
+                  {[0, 1, 2].map((i) => (
+                    <line key={`v-${i}`} x1={50 + i * 265} y1="350" x2={50 + i * 265} y2="30" stroke="#e5e7eb" strokeWidth="1" />
+                  ))}
+
+                  {/* Axes */}
+                  <line x1="50" y1="350" x2="580" y2="350" stroke="#374151" strokeWidth="2" />
+                  <line x1="50" y1="350" x2="50" y2="30" stroke="#374151" strokeWidth="2" />
+
+                  {/* Y-axis labels */}
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <text key={`y-${i}`} x="40" y={355 - i * 70} textAnchor="end" className="text-xs fill-gray-600">
+                      £{i * 5000}
+                    </text>
+                  ))}
+
+                  {/* X-axis labels */}
+                  {projectionYears === 0 && (
+                    <>
+                      <text x="50" y="375" textAnchor="middle" className="text-xs fill-gray-600">0y</text>
+                    </>
+                  )}
+                  {projectionYears === 5 && (
+                    <>
+                      <text x="50" y="375" textAnchor="middle" className="text-xs fill-gray-600">0y</text>
+                      <text x="315" y="375" textAnchor="middle" className="text-xs fill-gray-600">2.5y</text>
+                      <text x="580" y="375" textAnchor="middle" className="text-xs fill-gray-600">5y</text>
+                    </>
+                  )}
+                  {projectionYears === 10 && (
+                    <>
+                      <text x="50" y="375" textAnchor="middle" className="text-xs fill-gray-600">0y</text>
+                      <text x="230" y="375" textAnchor="middle" className="text-xs fill-gray-600">5y</text>
+                      <text x="410" y="375" textAnchor="middle" className="text-xs fill-gray-600">10y</text>
+                      <text x="580" y="375" textAnchor="middle" className="text-xs fill-gray-600">10y</text>
+                    </>
+                  )}
+
+                  {/* Data line */}
+                  {projectionYears === 0 && (
+                    <circle cx="50" cy={350 - (stats.cumulative / 5000) * 70} r="4" fill="#2563eb" />
+                  )}
+                  {projectionYears === 5 && (
+                    <polyline points={`50,350 315,${350 - (stats.cumulative * 0.5 / 5000) * 70} 580,${350 - (stats.cumulative / 5000) * 70}`} fill="none" stroke="#2563eb" strokeWidth="2" />
+                  )}
+                  {projectionYears === 10 && (
+                    <polyline points={`50,350 230,${350 - (stats.cumulative * 0.5 / 5000) * 70} 410,${350 - (stats.cumulative * 0.75 / 5000) * 70} 580,${350 - (stats.cumulative / 5000) * 70}`} fill="none" stroke="#2563eb" strokeWidth="2" />
+                  )}
+                </svg>
+              </div>
+              <p className="text-gray-600 text-sm mt-4">This chart shows how the total extra tax burden accumulates over your selected time horizon for a £{(selectedSalary / 1000).toFixed(0)}k salary.</p>
+            </div>
           </div>
 
           {/* Why It Matters */}

@@ -87,10 +87,10 @@ export default function FrozenTaxBands() {
     }
 
     // Project forward assuming annual tax burden increases at current rate
-    const annualIncrease = (taxData[2026] - taxData[2024]) / 2; // ~1.5 years of increase
+    const annualIncrease = (taxData[2026] - taxData[2024]) / 2; // Average annual increase
     const futureYears = [2026, 2031, 2036].slice(0, projectionYears === 5 ? 2 : 3);
     const futureValues = futureYears.map((year, idx) =>
-      taxData[2026] + (annualIncrease * (year - 2026) / 5)
+      taxData[2026] + (annualIncrease * (year - 2026))
     );
 
     return { years: historicalYears.concat(futureYears.slice(1)), values: historicalValues.concat(futureValues.slice(1)) };

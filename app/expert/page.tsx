@@ -93,6 +93,7 @@ export default function ExpertHub() {
       color: 'from-cyan-500/20 to-blue-500/20',
       border: 'border-cyan-500/30',
       badge: 'Complex Topic',
+      image: '/frozen-tax-analytics.jpg',
     },
     {
       title: 'Tax Allowances Guide',

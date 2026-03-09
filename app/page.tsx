@@ -573,7 +573,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8">
               <Link href="/guided" className="group">
                 <button className="w-full sm:w-auto bg-white text-primary-600 px-8 py-3 rounded-full font-extrabold hover:bg-gray-100 transition shadow-lg">
-                  Guide Me
+                  Guide Me (STAGING TEST)
                 </button>
               </Link>
               <Link href="/expert" className="group">

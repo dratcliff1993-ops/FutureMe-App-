@@ -8,6 +8,7 @@ export default function FrozenTaxBands() {
   const [selectedSalary, setSelectedSalary] = useState(60000);
   const [projectionYears, setProjectionYears] = useState<0 | 5 | 10>(0);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [hoveredPointIdx, setHoveredPointIdx] = useState<number | null>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleDropdownClose = () => {
@@ -257,7 +258,7 @@ export default function FrozenTaxBands() {
             {/* Cumulative Tax Impact Graph */}
             <div className="mt-12 pt-8 border-t border-gray-200">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Cumulative Tax Impact Since 2015</h3>
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-8">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 relative">
                 <svg viewBox="0 0 700 400" className="w-full h-auto" style={{ minHeight: '300px' }}>
                   {/* Grid lines */}
                   {[0, 1, 2, 3, 4].map((i) => (
@@ -309,6 +310,22 @@ export default function FrozenTaxBands() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                       />
+                      {graphData.years.map((_, idx) => {
+                        const x = 70 + idx * (580 / (graphData.years.length - 1));
+                        const y = 350 - Math.min((graphData.values[idx] / 5000) * 70, 320);
+                        return (
+                          <circle
+                            key={`hover-${idx}`}
+                            cx={x}
+                            cy={y}
+                            r="8"
+                            fill="transparent"
+                            cursor="pointer"
+                            onMouseEnter={() => setHoveredPointIdx(idx)}
+                            onMouseLeave={() => setHoveredPointIdx(null)}
+                          />
+                        );
+                      })}
                       {graphData.years.map((_, idx) => (
                         <circle
                           key={`point-${idx}`}
@@ -329,6 +346,23 @@ export default function FrozenTaxBands() {
                     </>
                   )}
                 </svg>
+
+                {/* Tooltip */}
+                {hoveredPointIdx !== null && (
+                  <div className="absolute bg-gray-900 text-white px-3 py-2 rounded-lg text-sm shadow-lg pointer-events-none" style={{
+                    left: `${70 + hoveredPointIdx * (580 / (graphData.years.length - 1)) * (700 / 700)}px`,
+                    top: `${350 - Math.min((graphData.values[hoveredPointIdx] / 5000) * 70, 320) * (400 / 400) - 40}px`,
+                    transform: 'translateX(-50%)',
+                  }}>
+                    <div className="font-semibold">{graphData.years[hoveredPointIdx]}</div>
+                    <div>£{graphData.values[hoveredPointIdx].toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
+                    {hoveredPointIdx > 0 && (
+                      <div className="text-xs text-gray-300">
+                        £{Math.round((graphData.values[hoveredPointIdx] - graphData.values[hoveredPointIdx - 1]) / (graphData.years[hoveredPointIdx] - graphData.years[hoveredPointIdx - 1])).toLocaleString()}/year
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
               <p className="text-gray-600 text-sm mt-4">Historical data shows cumulative extra tax paid since 2015 for a £{(selectedSalary / 1000).toFixed(0)}k salary. The red line marks April 2021 when thresholds were frozen. {projectionYears > 0 && `With current trajectory, this could reach £${(stats.cumulative + (projectionYears / 5) * stats.cumulative).toLocaleString()} in ${projectionYears} years.`}</p>
             </div>

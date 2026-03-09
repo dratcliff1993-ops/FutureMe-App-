@@ -1714,7 +1714,7 @@ function InflationCalculator() {
           </div>
 
           <div className="order-1 lg:order-2">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 leading-tight">
+            <h2 className="text-5xl md:text-6xl font-black text-slate-900 mb-6 leading-tight">
               What does your<br />
               money actually<br />
               buy today<motion.span
@@ -1725,7 +1725,7 @@ function InflationCalculator() {
                 .
               </motion.span>
             </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 mb-8 leading-relaxed max-w-lg">
+            <p className="text-xl text-gray-700 mb-8 leading-relaxed max-w-lg">
               See how UK inflation has eroded the real value of your money — and what everyday items now cost compared to when you started saving.
             </p>
           </div>
@@ -1752,18 +1752,18 @@ function InflationCalculator() {
         </div>
 
         {/* Hero Card */}
-        <div className="bg-white border border-gray-200 rounded-3xl p-4 sm:p-6 md:p-8 mb-12 shadow-sm">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-center">
+        <div className="bg-white border border-gray-200 rounded-3xl p-8 mb-12 shadow-sm">
+          <div className="grid grid-cols-3 gap-8 items-center">
             <div>
               <div className="text-xs font-semibold text-gray-500 uppercase mb-2">You had then</div>
               <div className="inline-block">
                 <div className="flex items-baseline gap-1 mb-3">
-                  <span className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900">£</span>
+                  <span className="text-5xl font-black text-gray-900">£</span>
                   <input
                     type="number"
                     value={thenAmount}
                     onChange={(e) => setThenAmount(Number(e.target.value))}
-                    className="text-3xl sm:text-4xl md:text-5xl font-black bg-transparent outline-none text-gray-900"
+                    className="text-5xl font-black bg-transparent outline-none text-gray-900"
                     style={{ width: 'auto', maxWidth: '160px' }}
                   />
                 </div>
@@ -1794,7 +1794,7 @@ function InflationCalculator() {
             >
               <div className="text-xs font-semibold text-blue-600 uppercase mb-2">Equivalent today</div>
               <div className="inline-block">
-                <div className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-3">
+                <div className="text-5xl font-black text-gray-900 mb-3">
                   {nowAmount >= 1000 ? '£' + Math.round(nowAmount).toLocaleString() : fmt(nowAmount)}
                 </div>
                 <motion.div
@@ -1922,12 +1922,12 @@ function InflationCalculator() {
         </div>
 
         {/* CTA Bar */}
-        <div className="bg-gradient-to-r from-blue-600 via-blue-600 to-purple-600 rounded-3xl p-4 sm:p-6 md:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 text-white">
+        <div className="bg-gradient-to-r from-blue-600 via-blue-600 to-purple-600 rounded-3xl p-8 flex items-center justify-between gap-6 text-white">
           <div>
-            <h3 className="text-lg sm:text-xl md:text-2xl font-black mb-2">Beat inflation — start investing</h3>
-            <p className="text-sm sm:text-base text-blue-100">A Cash ISA isn't keeping up. See how a Stocks & Shares ISA could protect your real wealth.</p>
+            <h3 className="text-2xl font-black mb-2">Beat inflation — start investing</h3>
+            <p className="text-blue-100">A Cash ISA isn't keeping up. See how a Stocks & Shares ISA could protect your real wealth.</p>
           </div>
-          <button className="flex-shrink-0 bg-white text-blue-600 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-bold text-sm sm:text-base hover:shadow-lg transition-all">
+          <button className="flex-shrink-0 bg-white text-blue-600 px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all">
             See ISA returns →
           </button>
         </div>

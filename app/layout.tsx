@@ -5,6 +5,9 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'FutureMe - Financial Planning Reimagined',
   description: 'Master your finances with intelligent tax and loan optimization',
+  other: {
+    'google-adsense-account': 'ca-pub-8720385151949984',
+  },
 };
 
 export default function RootLayout({

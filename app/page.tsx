@@ -557,7 +557,7 @@ export default function Home() {
         </div>
 
         {/* Content Container */}
-        <div className="relative min-h-[550px] flex items-center">
+        <div className="relative min-h-[550px] flex items-center pt-16 sm:pt-0">
           <div className="max-w-7xl mx-auto w-full px-6 lg:px-12">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6 leading-tight text-[#f5f1ed] max-w-lg tracking-tight">
               Your modern<br />financial advisor<motion.span
@@ -602,7 +602,7 @@ export default function Home() {
                 shouldn't
                 <span className="absolute bottom-0 left-0 h-1 bg-primary-600" style={{animation: 'underlineSlide 3.5s ease-in-out forwards'}}></span>
               </span>
-              {' '}be this confusing
+              {' '}be<br className="md:hidden" /> this confusing
             </h2>
             <style>{`
               @keyframes underlineSlide {
@@ -1752,19 +1752,19 @@ function InflationCalculator() {
         </div>
 
         {/* Hero Card */}
-        <div className="bg-white border border-gray-200 rounded-3xl p-8 mb-12 shadow-sm">
-          <div className="grid grid-cols-3 gap-8 items-center">
+        <div className="bg-white border border-gray-200 rounded-3xl p-4 sm:p-8 mb-12 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8 items-center">
             <div>
               <div className="text-xs font-semibold text-gray-500 uppercase mb-2">You had then</div>
               <div className="inline-block">
                 <div className="flex items-baseline gap-1 mb-3">
-                  <span className="text-5xl font-black text-gray-900">£</span>
+                  <span className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900">£</span>
                   <input
                     type="number"
                     value={thenAmount}
                     onChange={(e) => setThenAmount(Number(e.target.value))}
-                    className="text-5xl font-black bg-transparent outline-none text-gray-900"
-                    style={{ width: 'auto', maxWidth: '160px' }}
+                    className="text-3xl sm:text-4xl md:text-5xl font-black bg-transparent outline-none text-gray-900"
+                    style={{ width: 'auto', maxWidth: '120px' }}
                   />
                 </div>
                 <div className="h-0.5 bg-gray-300 mb-3" />
@@ -1779,7 +1779,7 @@ function InflationCalculator() {
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center gap-2 -ml-16">
+            <div className="hidden md:flex flex-col items-center justify-center gap-2 -ml-16">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center text-white text-xl">
                 📉
               </div>
@@ -1794,7 +1794,7 @@ function InflationCalculator() {
             >
               <div className="text-xs font-semibold text-blue-600 uppercase mb-2">Equivalent today</div>
               <div className="inline-block">
-                <div className="text-5xl font-black text-gray-900 mb-3">
+                <div className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-900 mb-3">
                   {nowAmount >= 1000 ? '£' + Math.round(nowAmount).toLocaleString() : fmt(nowAmount)}
                 </div>
                 <motion.div
@@ -1851,7 +1851,7 @@ function InflationCalculator() {
         {/* Category Tabs */}
         <div className="mb-8">
           <h3 className="text-lg font-bold text-gray-900 mb-4">Price changes by category</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex overflow-x-auto gap-2 pb-2">
             {['all', 'food', 'transport', 'utilities', 'leisure'].map((cat) => {
               const labels: { [key: string]: string } = {
                 all: '🧺 All',

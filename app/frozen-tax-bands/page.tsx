@@ -313,28 +313,34 @@ export default function FrozenTaxBands() {
                       {graphData.years.map((_, idx) => {
                         const x = 70 + idx * (580 / (graphData.years.length - 1));
                         const y = 350 - Math.min((graphData.values[idx] / 5000) * 70, 320);
+                        const isHovered = hoveredPointIdx === idx;
                         return (
-                          <circle
-                            key={`hover-${idx}`}
-                            cx={x}
-                            cy={y}
-                            r="8"
-                            fill="transparent"
-                            cursor="pointer"
-                            onMouseEnter={() => setHoveredPointIdx(idx)}
-                            onMouseLeave={() => setHoveredPointIdx(null)}
-                          />
+                          <g key={`point-group-${idx}`}>
+                            {/* Large invisible hover target */}
+                            <circle
+                              cx={x}
+                              cy={y}
+                              r="25"
+                              fill="transparent"
+                              cursor="pointer"
+                              onMouseEnter={() => setHoveredPointIdx(idx)}
+                              onMouseLeave={() => setHoveredPointIdx(null)}
+                            />
+                            {/* Vertical guide line on hover */}
+                            {isHovered && (
+                              <line x1={x} y1="350" x2={x} y2={y} stroke="#2563eb" strokeWidth="2" strokeDasharray="3,3" opacity="0.4" />
+                            )}
+                            {/* Highlighted point circle on hover */}
+                            <circle
+                              cx={x}
+                              cy={y}
+                              r={isHovered ? 8 : 5}
+                              fill={isHovered ? '#1d4ed8' : '#2563eb'}
+                              transition="all 0.2s ease"
+                            />
+                          </g>
                         );
                       })}
-                      {graphData.years.map((_, idx) => (
-                        <circle
-                          key={`point-${idx}`}
-                          cx={70 + idx * (580 / (graphData.years.length - 1))}
-                          cy={350 - Math.min((graphData.values[idx] / 5000) * 70, 320)}
-                          r="5"
-                          fill="#2563eb"
-                        />
-                      ))}
                     </>
                   )}
 

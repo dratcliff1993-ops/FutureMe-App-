@@ -103,6 +103,7 @@ export default function ExpertHub() {
       color: 'from-purple-500/20 to-pink-500/20',
       border: 'border-purple-500/30',
       badge: 'Interactive',
+      image: '/tax-allowances-planning.jpg',
     },
     {
       title: 'Pension Planning',

@@ -205,6 +205,40 @@ export default function FrozenTaxBands() {
             </div>
           </div>
 
+          {/* Data Sources & Methodology */}
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-8 mb-8">
+            <h2 className="text-xl font-bold text-blue-900 mb-4">📊 Data Sources & Methodology</h2>
+            <div className="space-y-4 text-sm text-blue-900">
+              <div>
+                <p className="font-semibold mb-1">Inflation Adjustment (20.6%)</p>
+                <p className="text-blue-800">
+                  Based on Office for National Statistics (ONS) Consumer Price Index (CPI) data. From April 2021 (freeze began) to March 2026, cumulative inflation was 20.6%.
+                </p>
+                <p className="text-xs text-blue-600 mt-2">
+                  Source: <a href="https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/czbh" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">ONS CPI Data (Series CZBH)</a>
+                </p>
+              </div>
+              <div className="pt-3 border-t border-blue-200">
+                <p className="font-semibold mb-1">Tax Impact Calculations</p>
+                <p className="text-blue-800">
+                  Extra tax calculations based on UK income tax rates for the relevant tax years (2015-26). Assumes standard personal allowance, no other reliefs, and England/Wales/Northern Ireland rates.
+                </p>
+                <p className="text-xs text-blue-600 mt-2">
+                  Source: <a href="https://www.gov.uk/guidance/rates-and-thresholds-for-employers" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">HMRC Rates and Thresholds</a>
+                </p>
+              </div>
+              <div className="pt-3 border-t border-blue-200">
+                <p className="font-semibold mb-1">Why Thresholds Were Frozen</p>
+                <p className="text-blue-800">
+                  In 2021, the government announced a freeze on personal allowance and basic rate threshold to September 2025 (later extended). This was part of tax policy to raise revenue while controlling headline tax rate changes.
+                </p>
+                <p className="text-xs text-blue-600 mt-2">
+                  Source: <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-8901/" target="_blank" rel="noopener noreferrer" className="underline hover:text-blue-700">House of Commons Library - Tax Thresholds (CBP-8901)</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Impact Calculator */}
           <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Extra Tax You're Paying</h2>
@@ -387,7 +421,7 @@ export default function FrozenTaxBands() {
           </div>
 
           {/* Why It Matters */}
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-6 mb-12">
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-3">Fiscal Drag</h3>
               <p className="text-gray-700">You move into higher tax brackets purely due to inflation, not real income growth. This silently increases your tax burden year after year.</p>
@@ -395,6 +429,25 @@ export default function FrozenTaxBands() {
             <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-3">Lost Purchasing Power</h3>
               <p className="text-gray-700">You're paying more tax on the same real income. Your take-home pay doesn't keep up with inflation, so you can afford less over time.</p>
+            </div>
+          </div>
+
+          {/* Disclaimer & Future Changes */}
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 mt-12">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">⚖️ Important Disclaimer</h3>
+            <div className="space-y-3 text-sm text-gray-700">
+              <p>
+                <strong>Frozen Until 2031:</strong> The UK government has announced that personal allowance and basic rate threshold will remain frozen until April 2031. Projections beyond 2026 assume current inflation rates and tax policy continues unchanged.
+              </p>
+              <p>
+                <strong>This Is Not Tax Advice:</strong> This calculator shows estimated impact based on standard 2026 tax rules. Your actual tax position may differ due to reliefs, allowances, or personal circumstances. Always consult HMRC or a qualified tax advisor for your specific situation.
+              </p>
+              <p>
+                <strong>Data Sources:</strong> All calculations use official ONS inflation data and HMRC tax rates. Projections assume linear continuation of current inflation rates, which may not reflect actual future inflation.
+              </p>
+              <p className="pt-2 border-t border-gray-300 text-xs text-gray-600">
+                Last Updated: March 2026 | Data Based On: ONS CPI (March 2026) | HMRC Rates (6 April 2026)
+              </p>
             </div>
           </div>
         </div>

@@ -41,7 +41,7 @@ export default function Home() {
   const [giftAid, setGiftAid] = useState(0);
   const [tradingAllowance, setTradingAllowance] = useState(0);
   const [taxCode, setTaxCode] = useState('1257L');
-  const [taxYear] = useState('2025/26');
+  const [taxYear] = useState('2026/27');
   const [country, setCountry] = useState('England');
   const [studentLoan, setStudentLoan] = useState('None');
   const [inflationFromYear, setInflationFromYear] = useState(2016);
@@ -218,7 +218,8 @@ export default function Home() {
       else if (remaining > 0) marginalRate = 0.20;
       else marginalRate = 0;
     }
-    const dividendAllowance = 1000;
+    // Dividend allowance 2026/27: £500
+    const dividendAllowance = 500;
     const dividendTaxable = Math.max(0, dividends - dividendAllowance);
 
     let incomeTax = 0;
@@ -240,7 +241,7 @@ export default function Home() {
 
     // Income Tax Calculation
     if (country === 'Scotland') {
-      // Scotland 2025/26
+      // Scotland 2026/27
       const remaining = Math.max(0, taxableIncome - effectivePersonalAllowance);
       personalAllowanceUsed = personalAllowanceFromCode - Math.max(0, personalAllowanceFromCode - effectivePersonalAllowance);
 
@@ -275,7 +276,7 @@ export default function Home() {
         }
       }
     } else {
-      // England, Wales & NI 2025/26
+      // England, Wales & NI 2026/27
       const remaining = Math.max(0, taxableIncome - effectivePersonalAllowance);
       personalAllowanceUsed = personalAllowanceFromCode - Math.max(0, personalAllowanceFromCode - effectivePersonalAllowance);
 
@@ -298,9 +299,11 @@ export default function Home() {
       }
     }
 
-    // National Insurance 2025/26
-    const niThreshold = 12570;
-    const niUpperBand = 50270;
+    // National Insurance 2026/27
+    // 8% on £12,584 to £50,284 (approx £242-£967/week)
+    // 2% on earnings above £50,284
+    const niThreshold = 12584;
+    const niUpperBand = 50284;
 
     if (niBaseSalary > niThreshold) {
       const niBasic = Math.min(niBaseSalary - niThreshold, niUpperBand - niThreshold);
@@ -470,7 +473,7 @@ export default function Home() {
             <div className="text-3xl font-bold text-[#f5f1ed]">FutureMe</div>
           </div>
           <nav
-            className="hidden md:flex gap-8 text-[#f5f1ed] overflow-visible"
+            className="hidden md:flex gap-8 text-[#f5f1ed] overflow-visible items-center"
           >
             {navItems.map((item) => (
               <div
@@ -490,6 +493,10 @@ export default function Home() {
                 </button>
               </div>
             ))}
+            <div className="h-6 border-l border-white/20 mx-2"></div>
+            <Link href="/calculator-help" className="text-[#f5f1ed] hover:text-white transition font-medium">
+              FAQs
+            </Link>
           </nav>
           <div className="flex gap-4 items-center">
             <button className="text-[#f5f1ed] hover:text-[#f5f1ed]/70 transition">Log in</button>
@@ -1076,6 +1083,7 @@ export default function Home() {
                   <div>
                     <label className="block text-gray-700 text-sm font-medium mb-2">Dividend Income</label>
                     <input type="number" placeholder="Enter amount" value={dividends || ''} onChange={(e) => setDividends(e.target.value === '' ? 0 : Number(e.target.value))} className="calc-input w-full text-sm" />
+                    <p className="text-xs text-gray-600 mt-1">First £500 is tax-free (2026/27 allowance)</p>
                   </div>
                 </div>
               </div>
@@ -1274,6 +1282,7 @@ export default function Home() {
                   <p className="text-2xl font-bold text-blue-600">{taxes.effectiveTaxRate}%</p>
                 </div>
               </div>
+
 
               {/* Tax Breakdown */}
               <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
@@ -1891,7 +1900,7 @@ function InflationCalculator() {
                       bc === 'high' ? 'bg-red-50 text-red-600' : bc === 'mid' ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'
                     }`}
                   >
-                    +{p}%
+                    {p > 0 ? '+' : ''}{p}%
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm mb-3">

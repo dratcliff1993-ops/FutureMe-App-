@@ -452,10 +452,10 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-hero">
       {/* Header */}
       <header className="fixed top-0 w-full z-[9999] backdrop-blur-sm bg-black/10">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between overflow-visible">
-          <div className="flex gap-3 items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between overflow-visible">
+          <div className="flex gap-2 sm:gap-3 items-center">
             {/* FutureMe Logo */}
-            <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center flex-shrink-0">
               <svg viewBox="0 0 100 100" className="w-full h-full" style={{transform: 'skew(-20deg) rotate(-15deg)'}}>
                 <text
                   x="50"
@@ -470,7 +470,7 @@ export default function Home() {
                 </text>
               </svg>
             </div>
-            <div className="text-3xl font-bold text-[#f5f1ed]">FutureMe</div>
+            <div className="text-xl sm:text-3xl font-bold text-[#f5f1ed]">FutureMe</div>
           </div>
           <nav
             className="hidden md:flex gap-8 text-[#f5f1ed] overflow-visible items-center"
@@ -498,9 +498,9 @@ export default function Home() {
               FAQs
             </Link>
           </nav>
-          <div className="flex gap-4 items-center">
-            <button className="text-[#f5f1ed] hover:text-[#f5f1ed]/70 transition">Log in</button>
-            <button className="bg-white text-primary-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+          <div className="flex gap-2 sm:gap-4 items-center">
+            <button className="text-xs sm:text-base text-[#f5f1ed] hover:text-[#f5f1ed]/70 transition">Log in</button>
+            <button className="bg-white text-primary-600 px-3 sm:px-6 py-1 sm:py-2 text-xs sm:text-base rounded-full font-semibold hover:bg-gray-100 transition">
               Sign up
             </button>
           </div>

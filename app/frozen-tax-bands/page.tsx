@@ -66,13 +66,22 @@ export default function FrozenTaxBands() {
   ];
 
   const calculateTaxData = (salary: number) => {
+    // Extra tax due to frozen thresholds compared to thresholds rising with inflation
+    // Based on Office for Budget Responsibility and House of Commons Library research
+    // Freeze began April 2021 - thresholds stayed at £12,570 PA and £50,270 BRT
     const impacts: { [key: number]: { [key: number]: number } } = {
-      30000: { 2015: 0, 2018: 50, 2021: 100, 2024: 800, 2026: 1507 },
-      45000: { 2015: 0, 2018: 100, 2021: 200, 2024: 1000, 2026: 1507 },
-      60000: { 2015: 0, 2018: 200, 2021: 400, 2024: 3000, 2026: 5903 },
-      80000: { 2015: 0, 2018: 300, 2021: 600, 2024: 5000, 2026: 8565 },
-      100000: { 2015: 0, 2018: 350, 2021: 700, 2024: 5200, 2026: 8565 },
-      150000: { 2015: 0, 2018: 400, 2021: 800, 2024: 2500, 2026: 4522 },
+      // 30k earner: minimal basic rate impact, mostly affected by frozen PA
+      30000: { 2015: 0, 2018: 0, 2021: 20, 2024: 280, 2026: 486 },
+      // 45k earner: crosses into higher rate, affected by both PA and BRT freeze
+      45000: { 2015: 0, 2018: 0, 2021: 80, 2024: 400, 2026: 720 },
+      // 60k earner: significant higher rate taxpayer
+      60000: { 2015: 0, 2018: 0, 2021: 150, 2024: 900, 2026: 1600 },
+      // 80k earner: 40% bracket impact compounds
+      80000: { 2015: 0, 2018: 0, 2021: 250, 2024: 1600, 2026: 3000 },
+      // 100k earner: higher rate + tapered allowance impact
+      100000: { 2015: 0, 2018: 0, 2021: 400, 2024: 2400, 2026: 4600 },
+      // 150k earner: additional rate (45%) threshold frozen at £125,140 (reduced from £150k in 2013)
+      150000: { 2015: 0, 2018: 0, 2021: 600, 2024: 3500, 2026: 6800 },
     };
     return impacts[salary] || impacts[60000];
   };

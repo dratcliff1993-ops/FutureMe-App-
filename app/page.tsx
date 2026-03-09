@@ -562,7 +562,6 @@ export default function Home() {
               </motion.span>
             </h1>
             <p className="text-lg text-[#f5f1ed] mb-8 leading-relaxed max-w-4xl">
-              🧪 <span className="text-yellow-300">STAGING VERSION</span> - Test changes before going live<br />
               Figuring out taxes, investing, and saving shouldn't be a solo mission.<br />
               FutureMe is the jargon-free hub designed to bridge the UK's advice gap.<br />
               <br />

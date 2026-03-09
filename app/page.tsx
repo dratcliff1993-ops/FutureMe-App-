@@ -452,7 +452,7 @@ export default function Home() {
     <main className="min-h-screen bg-gradient-hero">
       {/* Header */}
       <header className="fixed top-0 w-full z-[9999] backdrop-blur-sm bg-black/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between overflow-visible">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between overflow-x-hidden">
           <div className="flex gap-2 sm:gap-3 items-center">
             {/* FutureMe Logo */}
             <div className="w-8 sm:w-10 h-8 sm:h-10 flex items-center justify-center flex-shrink-0">
@@ -473,7 +473,7 @@ export default function Home() {
             <div className="text-xl sm:text-3xl font-bold text-[#f5f1ed]">FutureMe</div>
           </div>
           <nav
-            className="hidden md:flex gap-8 text-[#f5f1ed] overflow-visible items-center"
+            className="hidden md:flex gap-8 text-[#f5f1ed] overflow-x-hidden items-center"
           >
             {navItems.map((item) => (
               <div

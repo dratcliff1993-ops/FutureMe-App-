@@ -349,7 +349,6 @@ export default function FrozenTaxBands() {
                               cy={y}
                               r={isHovered ? 8 : 5}
                               fill={isHovered ? '#1d4ed8' : '#2563eb'}
-                              transition="all 0.2s ease"
                             />
                           </g>
                         );

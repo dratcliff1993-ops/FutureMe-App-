@@ -97,8 +97,12 @@ export default function FrozenTaxBands() {
   };
 
   const taxData = calculateTaxData(selectedSalary);
-  const stats = { cumulative: taxData[2026], annual: Math.round(taxData[2026] / 5), year: 2026 };
   const graphData = getGraphDataPoints(selectedSalary, projectionYears);
+
+  // Get the current or projected cumulative value
+  const currentValue = graphData.values[graphData.values.length - 1];
+  const currentYear = graphData.years[graphData.years.length - 1];
+  const stats = { cumulative: Math.round(currentValue), annual: Math.round(currentValue / Math.max(currentYear - 2015, 1)), year: currentYear };
 
   return (
     <main className="min-h-screen bg-white">
@@ -243,14 +247,14 @@ export default function FrozenTaxBands() {
             <div className="mt-8 pt-8 border-t border-gray-200">
               <div className="grid sm:grid-cols-2 gap-6">
                 <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-                  <p className="text-gray-600 text-sm mb-2">Total Extra Tax Paid</p>
+                  <p className="text-gray-600 text-sm mb-2">Total Extra Tax {projectionYears > 0 ? 'Projected' : 'Paid'}</p>
                   <p className="text-4xl font-bold text-red-600">£{stats.cumulative.toLocaleString()}</p>
-                  <p className="text-gray-600 text-xs mt-2">Since frozen thresholds began (2021)</p>
+                  <p className="text-gray-600 text-xs mt-2">{projectionYears > 0 ? `Projected for ${stats.year}` : 'Since frozen thresholds began (2021)'}</p>
                 </div>
                 <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
                   <p className="text-gray-600 text-sm mb-2">Annual Impact</p>
                   <p className="text-4xl font-bold text-orange-600">£{stats.annual.toLocaleString()}</p>
-                  <p className="text-gray-600 text-xs mt-2">Average per year</p>
+                  <p className="text-gray-600 text-xs mt-2">{projectionYears > 0 ? `Average from 2015 to ${stats.year}` : 'Average per year (2015-2026)'}</p>
                 </div>
               </div>
             </div>

@@ -2096,7 +2096,7 @@ function InflationCalculator() {
                 </div>
 
                 {/* Year price cards below chart */}
-                <div className="mt-4 grid grid-cols-7 gap-1.5">
+                <div className="mt-4 grid grid-cols-7 gap-1">
                   {(() => {
                     const item = items.find(i => i.name === itemDetailName);
                     if (!item) return null;
@@ -2106,14 +2106,14 @@ function InflationCalculator() {
                         key={year}
                         onMouseEnter={() => setHoveredYear(year)}
                         onMouseLeave={() => setHoveredYear(null)}
-                        className={`p-2 rounded-lg text-center cursor-pointer transition-all ${
+                        className={`p-1.5 text-center cursor-pointer transition-all ${
                           hoveredYear === year
-                            ? 'bg-blue-600 text-white shadow-lg'
-                            : 'bg-gray-100 text-blue-600 hover:bg-gray-200'
+                            ? 'bg-blue-600 text-white'
+                            : 'text-gray-700 hover:text-blue-600'
                         }`}
                       >
-                        <div className="text-xs font-semibold">{year}</div>
-                        <div className="text-xs font-bold">£{((item as any)[year] || 0).toFixed(2)}</div>
+                        <div className="text-xs font-normal text-gray-400">{year}</div>
+                        <div className="text-sm font-medium">£{((item as any)[year] || 0).toFixed(2)}</div>
                       </div>
                     ));
                   })()}

@@ -1356,12 +1356,11 @@ export default function Home() {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="relative flex justify-between items-center py-1 px-2 border-b border-red-200 bg-red-50 rounded group cursor-help overflow-hidden">
+                      className="relative py-1 px-2 border-b border-red-200 bg-red-50 rounded group cursor-help overflow-hidden">
                       <div>
                         <p className="text-red-700 text-sm font-semibold">60% Tax Trap Effect</p>
-                        <p className="text-red-600 text-xs">Personal allowance withdrawal (£100k-£125.14k)</p>
+                        <p className="text-red-600 text-xs">You lose £1 of personal allowance for every £2 earned between £100k-£125.14k, creating an effective 60% tax rate in this band. Hover for details.</p>
                       </div>
-                      <p className="text-red-600 font-semibold">£{taxes.taxTrapEffect.toLocaleString()}</p>
 
                       {/* Tooltip */}
                       <div className="absolute bottom-full left-0 mb-2 w-72 hidden group-hover:block bg-red-900 text-white text-xs p-3 rounded-lg shadow-lg z-50">

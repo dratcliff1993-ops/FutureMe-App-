@@ -609,14 +609,14 @@ export default function Home() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 mt-8">
+            <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto">
               <Link href="/guided" className="group">
-                <button className="w-full sm:w-auto bg-white text-primary-600 px-8 py-3 rounded-full font-extrabold hover:bg-gray-100 transition shadow-lg">
+                <button className="w-full sm:w-auto bg-white text-primary-600 px-4 sm:px-8 py-3 rounded-full font-extrabold hover:bg-gray-100 transition shadow-lg text-sm sm:text-base">
                   Guide Me
                 </button>
               </Link>
               <Link href="/expert" className="group">
-                <button className="w-full sm:w-auto bg-black/15 backdrop-blur-md text-[#f5f1ed] px-8 py-3 rounded-full font-semibold border border-white/40 hover:bg-black/25 transition">
+                <button className="w-full sm:w-auto bg-black/15 backdrop-blur-md text-[#f5f1ed] px-4 sm:px-8 py-3 rounded-full font-semibold border border-white/40 hover:bg-black/25 transition text-sm sm:text-base">
                   Expert Mode
                 </button>
               </Link>

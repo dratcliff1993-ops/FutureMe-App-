@@ -68,38 +68,37 @@ export default function Home() {
     return 12570; // Default to standard allowance
   };
 
-  // Calculate extra tax due to frozen thresholds (researched data from frozen-tax-bands)
-  const calculateFrozenTaxExtra = (salary: number): number => {
-    // Based on Office for Budget Responsibility and House of Commons Library research
-    // Current 2026 values showing cumulative extra tax since freeze began (April 2021)
-    const frozenTaxImpacts: { [key: number]: number } = {
-      30000: 486,
-      45000: 720,
-      60000: 1600,
-      80000: 3000,
-      100000: 4600,
-      150000: 6800,
-    };
+  // Calculate tax if thresholds had risen with inflation (20.6% since 2021)
+  const calculateIndexedTax = (grossIncome: number): number => {
+    const INFLATION_ADJUSTMENT = 1.206; // 20.6% inflation since April 2021
+    const frozenPA = 12570;
+    const frozenBRT = 50270;
+    const frozenHRT = 125140;
 
-    // Find closest salary level
-    const salaries = Object.keys(frozenTaxImpacts).map(Number).sort((a, b) => a - b);
+    // Indexed thresholds
+    const indexedPA = Math.round(frozenPA * INFLATION_ADJUSTMENT);
+    const indexedBRT = Math.round(frozenBRT * INFLATION_ADJUSTMENT);
+    const indexedHRT = Math.round(frozenHRT * INFLATION_ADJUSTMENT);
 
-    if (salary <= salaries[0]) return frozenTaxImpacts[salaries[0]];
-    if (salary >= salaries[salaries.length - 1]) return frozenTaxImpacts[salaries[salaries.length - 1]];
+    let tax = 0;
+    const taxableIncome = Math.max(0, grossIncome - indexedPA);
 
-    // Interpolate between closest values
-    for (let i = 0; i < salaries.length - 1; i++) {
-      if (salary >= salaries[i] && salary <= salaries[i + 1]) {
-        const lower = salaries[i];
-        const upper = salaries[i + 1];
-        const lowerTax = frozenTaxImpacts[lower];
-        const upperTax = frozenTaxImpacts[upper];
-        const ratio = (salary - lower) / (upper - lower);
-        return Math.round(lowerTax + (upperTax - lowerTax) * ratio);
+    if (taxableIncome > 0) {
+      const basicRateAmount = Math.min(taxableIncome, Math.max(0, indexedBRT - indexedPA));
+      tax += basicRateAmount * 0.20;
+
+      if (taxableIncome > basicRateAmount) {
+        const higherRateAmount = Math.min(taxableIncome - basicRateAmount, Math.max(0, indexedHRT - indexedBRT));
+        tax += higherRateAmount * 0.40;
+
+        if (taxableIncome - basicRateAmount > higherRateAmount) {
+          const additionalRateAmount = taxableIncome - basicRateAmount - higherRateAmount;
+          tax += additionalRateAmount * 0.45;
+        }
       }
     }
 
-    return frozenTaxImpacts[60000]; // Default fallback
+    return Math.round(tax);
   };
 
   // Inflation data for calculator
@@ -1451,16 +1450,16 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-gray-600 text-xs mb-2">If Indexed to Inflation (2021-2026)</p>
-                    <p className="text-2xl font-bold text-green-600">£{Math.round(taxes.incomeTax * 0.75).toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-green-600">£{calculateIndexedTax(taxes.grossIncome).toLocaleString()}</p>
                   </div>
                 </div>
 
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <p className="text-slate-900 font-semibold">
-                    Extra tax due to frozen bands: <span className="text-lg text-orange-600">£{calculateFrozenTaxExtra(salary).toLocaleString()}</span>
+                    Extra tax due to frozen bands: <span className="text-lg text-orange-600">£{(taxes.incomeTax - calculateIndexedTax(taxes.grossIncome)).toLocaleString()}</span>
                   </p>
                   <p className="text-gray-600 text-xs mt-2">
-                    Cumulative extra tax paid since frozen thresholds began in April 2021.
+                    Extra tax you pay this year due to frozen thresholds since April 2021.
                   </p>
                   <Link href="/frozen-tax-bands" className="text-blue-600 hover:text-blue-700 text-xs mt-3 inline-block">
                     Click here for more detail →

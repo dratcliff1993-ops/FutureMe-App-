@@ -68,6 +68,40 @@ export default function Home() {
     return 12570; // Default to standard allowance
   };
 
+  // Calculate extra tax due to frozen thresholds (researched data from frozen-tax-bands)
+  const calculateFrozenTaxExtra = (salary: number): number => {
+    // Based on Office for Budget Responsibility and House of Commons Library research
+    // Current 2026 values showing cumulative extra tax since freeze began (April 2021)
+    const frozenTaxImpacts: { [key: number]: number } = {
+      30000: 486,
+      45000: 720,
+      60000: 1600,
+      80000: 3000,
+      100000: 4600,
+      150000: 6800,
+    };
+
+    // Find closest salary level
+    const salaries = Object.keys(frozenTaxImpacts).map(Number).sort((a, b) => a - b);
+
+    if (salary <= salaries[0]) return frozenTaxImpacts[salaries[0]];
+    if (salary >= salaries[salaries.length - 1]) return frozenTaxImpacts[salaries[salaries.length - 1]];
+
+    // Interpolate between closest values
+    for (let i = 0; i < salaries.length - 1; i++) {
+      if (salary >= salaries[i] && salary <= salaries[i + 1]) {
+        const lower = salaries[i];
+        const upper = salaries[i + 1];
+        const lowerTax = frozenTaxImpacts[lower];
+        const upperTax = frozenTaxImpacts[upper];
+        const ratio = (salary - lower) / (upper - lower);
+        return Math.round(lowerTax + (upperTax - lowerTax) * ratio);
+      }
+    }
+
+    return frozenTaxImpacts[60000]; // Default fallback
+  };
+
   // Inflation data for calculator
   const inflationData: { [key: number]: { [key: string]: number } } = {
     2016: {
@@ -1423,10 +1457,10 @@ export default function Home() {
 
                 <div className="mt-4 pt-4 border-t border-gray-200">
                   <p className="text-slate-900 font-semibold">
-                    Extra tax due to frozen bands: <span className="text-lg text-orange-600">£{Math.round(taxes.incomeTax * 0.25).toLocaleString()}</span>
+                    Extra tax due to frozen bands: <span className="text-lg text-orange-600">£{calculateFrozenTaxExtra(salary).toLocaleString()}</span>
                   </p>
                   <p className="text-gray-600 text-xs mt-2">
-                    You're paying approximately 25% more income tax due to frozen thresholds since 2021.
+                    Cumulative extra tax paid since frozen thresholds began in April 2021.
                   </p>
                   <Link href="/frozen-tax-bands" className="text-blue-600 hover:text-blue-700 text-xs mt-3 inline-block">
                     Click here for more detail →

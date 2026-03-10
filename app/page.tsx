@@ -2021,8 +2021,8 @@ function InflationCalculator() {
 
                           {/* Y-axis labels */}
                           {[0, 1, 2, 3, 4].map((i) => (
-                            <text key={`y${i}`} x="45" y={255 - i * 50} fontSize="11" textAnchor="end" fill="#6b7280">
-                              £{((maxPrice / 4) * i).toFixed(1)}
+                            <text key={`y${i}`} x="45" y={255 - i * 50} fontSize="13" textAnchor="end" fill="#6b7280" fontWeight="500">
+                              £{((maxPrice / 4) * i).toFixed(2)}
                             </text>
                           ))}
 
@@ -2114,7 +2114,7 @@ function InflationCalculator() {
                         }`}
                       >
                         <div className="text-xs font-semibold">{year}</div>
-                        <div className="text-sm font-bold">£{((item as any)[year] || 0).toFixed(2)}</div>
+                        <div className="text-xs font-bold">£{((item as any)[year] || 0).toFixed(2)}</div>
                       </div>
                     ));
                   })()}

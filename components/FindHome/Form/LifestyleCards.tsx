@@ -2,8 +2,62 @@
 
 import { useFindHomeStore } from '@/lib/stores/useFindHomeStore';
 
+// Priority weights for each demographic profile
+const demographicProfiles = {
+  young_professionals: {
+    walkability: 85,
+    safety: 70,
+    culture: 90,
+    greenSpace: 50,
+    nightlife: 95,
+    transit: 85,
+    affordability: 60,
+    family: 20,
+  },
+  families: {
+    walkability: 75,
+    safety: 95,
+    culture: 60,
+    greenSpace: 90,
+    nightlife: 40,
+    transit: 80,
+    affordability: 70,
+    family: 95,
+  },
+  retirees: {
+    walkability: 80,
+    safety: 90,
+    culture: 70,
+    greenSpace: 95,
+    nightlife: 30,
+    transit: 75,
+    affordability: 80,
+    family: 50,
+  },
+  students: {
+    walkability: 90,
+    safety: 75,
+    culture: 85,
+    greenSpace: 60,
+    nightlife: 90,
+    transit: 95,
+    affordability: 95,
+    family: 30,
+  },
+  mixed: {
+    walkability: 60,
+    safety: 80,
+    culture: 60,
+    greenSpace: 50,
+    nightlife: 50,
+    transit: 70,
+    affordability: 50,
+    family: 50,
+  },
+};
+
 export default function LifestyleCards() {
-  const { demographic, setDemographic, maxHousePrice, setMaxHousePrice, minHousePrice, setMinHousePrice } = useFindHomeStore();
+  const { demographic, setDemographic, maxHousePrice, setMaxHousePrice, minHousePrice, setMinHousePrice, setPriorityCategory } = useFindHomeStore();
 
   const demographics = [
     { id: 'young_professionals', label: '💼 Young Professionals', description: 'Nightlife, walkability, opportunities' },
@@ -21,7 +75,14 @@ export default function LifestyleCards() {
           {demographics.map((demo) => (
             <button
               key={demo.id}
-              onClick={() => setDemographic(demo.id as any)}
+              onClick={() => {
+                setDemographic(demo.id as any);
+                // Update priority categories based on demographic
+                const profile = demographicProfiles[demo.id as keyof typeof demographicProfiles];
+                Object.entries(profile).forEach(([key, value]) => {
+                  setPriorityCategory(key as any, value);
+                });
+              }}
               className={`p-3 rounded-lg border transition text-left ${
                 demographic === demo.id
                   ? 'border-blue-500/50 bg-blue-500/10 text-white'

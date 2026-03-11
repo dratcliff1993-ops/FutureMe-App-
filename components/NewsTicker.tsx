@@ -71,7 +71,7 @@ export default function NewsTicker() {
   }, []);
 
   return (
-    <div className="w-full bg-black border-b border-blue-600 overflow-hidden">
+    <div className="w-full bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 border-y border-cyan-500/50 overflow-hidden backdrop-blur-sm">
       <style>{`
         @keyframes newsScroll {
           0% {
@@ -81,34 +81,70 @@ export default function NewsTicker() {
             transform: translateX(-50%);
           }
         }
+        @keyframes pulse-glow {
+          0%, 100% {
+            box-shadow: inset 0 0 10px rgba(6, 182, 212, 0.1);
+          }
+          50% {
+            box-shadow: inset 0 0 20px rgba(6, 182, 212, 0.2);
+          }
+        }
         .news-scroll {
           animation: newsScroll 400s linear infinite;
         }
         .news-scroll:hover {
           animation-play-state: paused;
         }
+        .ticker-glow {
+          animation: pulse-glow 3s ease-in-out infinite;
+        }
+        .live-indicator {
+          width: 8px;
+          height: 8px;
+          background: #06b6d4;
+          border-radius: 50%;
+          animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+            box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7);
+          }
+          50% {
+            opacity: 0.8;
+          }
+          100% {
+            opacity: 1;
+            box-shadow: 0 0 0 8px rgba(6, 182, 212, 0);
+          }
+        }
       `}</style>
 
-      <div className="h-12 flex items-center overflow-hidden">
-        <div className="news-scroll flex gap-8 whitespace-nowrap">
+      <div className="h-16 flex items-center overflow-hidden ticker-glow px-4">
+        <div className="flex items-center gap-3 mr-4">
+          <div className="live-indicator"></div>
+          <span className="text-cyan-400 text-xs font-bold uppercase tracking-widest">LIVE</span>
+        </div>
+
+        <div className="news-scroll flex gap-12 whitespace-nowrap">
           {[...news, ...news, ...news, ...news, ...news, ...news, ...news, ...news, ...news, ...news].map((article, idx) => (
             <a
               key={idx}
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 min-w-max hover:opacity-80 transition-opacity group"
+              className="flex items-center gap-4 min-w-max hover:opacity-100 opacity-90 transition-all duration-300 group px-3 py-2 rounded-lg hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30"
             >
-              <span className="text-white text-xs font-bold uppercase tracking-wider group-hover:text-blue-400">
+              <span className="text-cyan-400 text-xs font-bold uppercase tracking-widest group-hover:text-cyan-300 whitespace-nowrap">
                 {article.source}
               </span>
-              <span className="text-white text-sm group-hover:text-blue-300 font-medium max-w-md truncate">
+              <span className="h-1 w-1 bg-cyan-400 rounded-full opacity-50 group-hover:opacity-100"></span>
+              <span className="text-white text-sm group-hover:text-cyan-200 font-medium max-w-lg truncate">
                 {article.title}
               </span>
-              <span className="text-white/50 text-xs">
+              <span className="text-cyan-500/60 text-xs group-hover:text-cyan-400 whitespace-nowrap">
                 {article.publishedAt}
               </span>
-              <span className="text-white/30 text-xs mx-2">•</span>
             </a>
           ))}
         </div>

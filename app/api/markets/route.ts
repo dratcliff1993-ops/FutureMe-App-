@@ -2,16 +2,18 @@ export async function GET() {
   try {
     const finnhubKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
 
-    // US indices (Finnhub free tier only supports US stocks/indices)
+    // Major global indices & assets - using stocks/ETFs as proxies where index data unavailable
     const symbols = [
-      { symbol: '^GSPC', display: 'S&P 500' },
-      { symbol: '^IXIC', display: 'NASDAQ' },
-      { symbol: '^DJI', display: 'Dow Jones' },
-      { symbol: 'AAPL', display: 'Tech Leaders' },
-      { symbol: 'XLF', display: 'Financials' },
-      { symbol: 'XLE', display: 'Energy' },
-      { symbol: 'XLV', display: 'Healthcare' },
-      { symbol: 'GLD', display: 'Gold' }
+      { symbol: 'BTC', display: 'Bitcoin' },
+      { symbol: 'GLD', display: 'Gold' },
+      { symbol: 'QQQ', display: 'NASDAQ-100' },  // NASDAQ proxy
+      { symbol: 'DIA', display: 'Dow Jones' },   // Dow proxy
+      { symbol: 'SPY', display: 'S&P 500' },     // S&P proxy
+      { symbol: 'EWG', display: 'Germany DAX' }, // Germany
+      { symbol: 'EWQ', display: 'France CAC' },  // France
+      { symbol: 'EWI', display: 'Italy MIB' },   // Italy
+      { symbol: 'EWN', display: 'Netherlands' }, // Netherlands
+      { symbol: 'EWP', display: 'Spain IBEX' }   // Spain
     ];
 
     const promises = symbols.map(({ symbol, display }) =>

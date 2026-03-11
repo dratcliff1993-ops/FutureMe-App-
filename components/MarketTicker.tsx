@@ -11,11 +11,16 @@ interface MarketData {
 
 export default function MarketTicker() {
   const [markets, setMarkets] = useState<MarketData[]>([
-    { symbol: 'Tech Leaders', price: 260.20, change: -0.63, changePercent: -0.24 },
-    { symbol: 'Financials', price: 49.57, change: -0.50, changePercent: -0.99 },
-    { symbol: 'Energy', price: 56.82, change: 1.22, changePercent: 2.19 },
-    { symbol: 'Healthcare', price: 152.68, change: -0.47, changePercent: -0.31 },
+    { symbol: 'Bitcoin', price: 31.23, change: 0.24, changePercent: 0.77 },
     { symbol: 'Gold', price: 475.58, change: -2.29, changePercent: -0.48 },
+    { symbol: 'NASDAQ-100', price: 606.61, change: -1.17, changePercent: -0.19 },
+    { symbol: 'Dow Jones', price: 473.97, change: -3.73, changePercent: -0.78 },
+    { symbol: 'S&P 500', price: 675.04, change: -2.15, changePercent: -0.32 },
+    { symbol: 'Germany DAX', price: 40.72, change: -0.38, changePercent: -0.92 },
+    { symbol: 'France CAC', price: 44.13, change: 0.05, changePercent: 0.11 },
+    { symbol: 'Italy MIB', price: 53.51, change: -0.28, changePercent: -0.52 },
+    { symbol: 'Netherlands', price: 59.78, change: 0.07, changePercent: 0.12 },
+    { symbol: 'Spain IBEX', price: 53.99, change: -0.01, changePercent: -0.02 },
   ]);
 
   useEffect(() => {

@@ -482,6 +482,12 @@ export default function Home() {
         { title: 'Frozen Tax Bands', href: '/frozen-tax-bands' },
       ],
     },
+    {
+      label: 'Find Home',
+      items: [
+        { title: 'Neighborhood Search', href: '/find-home' },
+      ],
+    },
   ];
 
   return (

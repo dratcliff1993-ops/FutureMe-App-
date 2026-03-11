@@ -669,7 +669,7 @@ export default function Home() {
       </div>
 
       {/* Bifurcated Track Selection - Neomorphic Design */}
-      <div className="pt-10 pb-0 px-4">
+      <div className="pt-10 pb-0 px-4 bg-[#f5f1ed]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-6">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight">
@@ -695,7 +695,7 @@ export default function Home() {
           </div>
 
           {/* UK Financial Reality Stats */}
-          <div className="mt-4 mb-0">
+          <div className="mt-4 mb-6">
             <StatsAnimation />
           </div>
 

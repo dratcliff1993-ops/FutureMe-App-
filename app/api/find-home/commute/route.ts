@@ -103,12 +103,11 @@ export async function GET(request: NextRequest) {
 
     // Call OpenRouteService
     const profile = getModeProfile(mode as any);
-    const url = `https://api.openrouteservice.org/v2/directions/${profile}`;
+    const url = `https://api.openrouteservice.org/v2/directions/${profile}?api_key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': apiKey,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

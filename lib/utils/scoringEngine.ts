@@ -26,12 +26,12 @@ export interface ScoringWeights {
 }
 
 const DEFAULT_WEIGHTS: ScoringWeights = {
-  commute: 30,
+  commute: 25,
   livability: 20,
   affordability: 15,
   poi: 12,
-  demographic: 13,
-  budget: 10,
+  demographic: 20,
+  budget: 8,
 };
 
 export const scoreNeighborhood = (

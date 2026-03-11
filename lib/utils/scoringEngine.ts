@@ -26,16 +26,16 @@ export interface ScoringWeights {
 }
 
 const DEFAULT_WEIGHTS: ScoringWeights = {
-  commute: 20,
-  livability: 25,
+  commute: 30,
+  livability: 20,
   affordability: 15,
-  poi: 15,
-  demographic: 15,
+  poi: 12,
+  demographic: 13,
   budget: 10,
 };
 
 export const scoreNeighborhood = (
-  neighborhood: Neighborhood,
+  neighborhood: Neighborhood & { _realCommuteTime?: number },
   userPreferences: {
     workplaceCoordinates: { lat: number; lng: number } | null;
     maxCommuteMins: number;
@@ -55,11 +55,15 @@ export const scoreNeighborhood = (
   // 1. Commute Score (0-100)
   let commuteScore = 100;
   if (userPreferences.workplaceCoordinates) {
-    const estimatedCommute = estimateCommute(
-      neighborhood.coordinates,
-      userPreferences.workplaceCoordinates,
-      userPreferences.commuteType
-    );
+    // Use real commute time if available, otherwise estimate
+    let estimatedCommute = neighborhood._realCommuteTime;
+    if (estimatedCommute === undefined) {
+      estimatedCommute = estimateCommute(
+        neighborhood.coordinates,
+        userPreferences.workplaceCoordinates,
+        userPreferences.commuteType
+      );
+    }
     const maxCommute = userPreferences.maxCommuteMins;
     if (estimatedCommute > maxCommute) {
       commuteScore = Math.max(0, 100 - (estimatedCommute - maxCommute) * 2);

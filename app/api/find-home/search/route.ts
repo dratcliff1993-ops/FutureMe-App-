@@ -4,23 +4,12 @@ import { scoreNeighborhoods, filterNeighborhoodsByConstraints, ScoredNeighborhoo
 
 interface EnrichedNeighborhood {
   [key: string]: unknown;
-  crimeData?: {
-    totalCrimes: number;
-    safetyScore: number;
-    source: 'police_uk' | 'error';
-  };
-  realPoiCounts?: {
-    parks: number;
-    pubs: number;
-    restaurants: number;
-    gyms: number;
-    schools: number;
-    museums: number;
-  };
   dataQuality: {
     crimeReal: boolean;
     poiReal: boolean;
+    commuteReal: boolean;
   };
+  _realCommuteTime?: number;
 }
 
 interface SearchRequest {
@@ -37,22 +26,17 @@ interface SearchRequest {
 }
 
 async function enrichWithCrimeData(
-  neighborhood: typeof dummyNeighborhoods[0],
-  baseUrl: string
-): Promise<EnrichedNeighborhood> {
+  neighborhood: typeof dummyNeighborhoods[0]
+): Promise<{ safetyScore: number; crimeReal: boolean }> {
   try {
     const coords = neighborhood.coordinates as any;
-    const url = new URL(`/api/find-home/crime`, baseUrl);
-    url.searchParams.set('lat', coords.lat.toString());
-    url.searchParams.set('lng', coords.lng.toString());
+    const url = `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3002'}/api/find-home/crime?lat=${coords.lat}&lng=${coords.lng}`;
 
-    // 3 second timeout for crime data fetch
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
 
-    const response = await fetch(url.toString(), {
+    const response = await fetch(url, {
       signal: controller.signal,
-      next: { revalidate: 86400 }
     });
 
     clearTimeout(timeout);
@@ -61,49 +45,41 @@ async function enrichWithCrimeData(
       const crimeData = await response.json();
       if (crimeData.source === 'police_uk') {
         return {
-          ...neighborhood,
-          crimeData: {
-            totalCrimes: crimeData.totalCrimes,
-            safetyScore: crimeData.safetyScore,
-            source: 'police_uk',
-          },
-          dataQuality: {
-            crimeReal: true,
-            poiReal: false,
-          },
+          safetyScore: crimeData.safetyScore,
+          crimeReal: true,
         };
       }
     }
   } catch (error) {
-    // Silently handle timeout and other errors - fall back to dummy data
+    console.error('Crime data fetch failed:', error);
   }
 
   return {
-    ...neighborhood,
-    dataQuality: {
-      crimeReal: false,
-      poiReal: false,
-    },
+    safetyScore: neighborhood.safetyScore,
+    crimeReal: false,
   };
 }
 
 async function enrichWithPOIData(
-  neighborhood: EnrichedNeighborhood,
-  baseUrl: string
-): Promise<EnrichedNeighborhood> {
+  neighborhood: typeof dummyNeighborhoods[0]
+): Promise<{
+  parks: number;
+  pubs: number;
+  restaurants: number;
+  gyms: number;
+  schools: number;
+  museums: number;
+  poiReal: boolean;
+}> {
   try {
-    const coords = neighborhood as any;
-    const url = new URL(`/api/find-home/poi`, baseUrl);
-    url.searchParams.set('lat', coords.coordinates.lat.toString());
-    url.searchParams.set('lng', coords.coordinates.lng.toString());
+    const coords = neighborhood.coordinates as any;
+    const url = `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3002'}/api/find-home/poi?lat=${coords.lat}&lng=${coords.lng}`;
 
-    // 5 second timeout for POI data fetch (Overpass can be slower)
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
 
-    const response = await fetch(url.toString(), {
+    const response = await fetch(url, {
       signal: controller.signal,
-      next: { revalidate: 604800 }
     });
 
     clearTimeout(timeout);
@@ -112,27 +88,72 @@ async function enrichWithPOIData(
       const poiData = await response.json();
       if (poiData.source === 'overpass') {
         return {
-          ...neighborhood,
-          realPoiCounts: {
-            parks: poiData.parks,
-            pubs: poiData.pubs,
-            restaurants: poiData.restaurants,
-            gyms: poiData.gyms,
-            schools: poiData.schools,
-            museums: poiData.museums,
-          },
-          dataQuality: {
-            ...neighborhood.dataQuality,
-            poiReal: true,
-          },
+          parks: poiData.parks,
+          pubs: poiData.pubs,
+          restaurants: poiData.restaurants,
+          gyms: poiData.gyms,
+          schools: poiData.schools,
+          museums: poiData.museums,
+          poiReal: true,
         };
       }
     }
   } catch (error) {
-    // Silently handle timeout and other errors - fall back to dummy data
+    console.error('POI data fetch failed:', error);
   }
 
-  return neighborhood;
+  return {
+    parks: neighborhood.poiCounts.parks,
+    pubs: neighborhood.poiCounts.pubs,
+    restaurants: neighborhood.poiCounts.restaurants,
+    gyms: neighborhood.poiCounts.gyms,
+    schools: neighborhood.poiCounts.schools,
+    museums: neighborhood.poiCounts.museums,
+    poiReal: false,
+  };
+}
+
+async function enrichWithCommuteData(
+  neighborhood: typeof dummyNeighborhoods[0],
+  workplaceCoords: { lat: number; lng: number } | null,
+  commuteType: string
+): Promise<{ durationMins: number; commuteReal: boolean }> {
+  if (!workplaceCoords) {
+    return {
+      durationMins: neighborhood.averageCommute,
+      commuteReal: false,
+    };
+  }
+
+  try {
+    const coords = neighborhood.coordinates as any;
+    const baseUrl = process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'http://localhost:3002';
+    const url = `${baseUrl}/api/find-home/commute?fromLat=${coords.lat}&fromLng=${coords.lng}&toLat=${workplaceCoords.lat}&toLng=${workplaceCoords.lng}&mode=${commuteType}`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(url, {
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeout);
+
+    if (response.ok) {
+      const commuteData = await response.json();
+      return {
+        durationMins: commuteData.durationMins,
+        commuteReal: commuteData.source === 'openrouteservice',
+      };
+    }
+  } catch (error) {
+    console.error('Commute data fetch failed:', error);
+  }
+
+  return {
+    durationMins: neighborhood.averageCommute,
+    commuteReal: false,
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -157,12 +178,38 @@ export async function POST(request: NextRequest) {
       requirePOIs: body.requiredPOIs.length > 0 ? body.requiredPOIs : undefined,
     });
 
-    // 2. Score directly without external API enrichment (faster & more reliable)
-    // External APIs (police.uk, Overpass) are slow/unreliable for real-time scoring
-    // Recommendations now vary based on user preferences instead of being static
+    // 2. Enrich with real data in parallel
+    const enrichedNeighborhoods = await Promise.all(
+      results.map(async (neighborhood) => {
+        const [crimeResult, poiResult, commuteResult] = await Promise.all([
+          enrichWithCrimeData(neighborhood),
+          enrichWithPOIData(neighborhood),
+          enrichWithCommuteData(neighborhood, body.workplaceCoordinates, body.commuteType),
+        ]);
 
-    // 3. Score neighborhoods with user preferences
-    const scored = scoreNeighborhoods(results, {
+        return {
+          ...neighborhood,
+          safetyScore: crimeResult.safetyScore,
+          poiCounts: {
+            parks: poiResult.parks,
+            pubs: poiResult.pubs,
+            restaurants: poiResult.restaurants,
+            gyms: poiResult.gyms,
+            schools: poiResult.schools,
+            museums: poiResult.museums,
+          },
+          dataQuality: {
+            crimeReal: crimeResult.crimeReal,
+            poiReal: poiResult.poiReal,
+            commuteReal: commuteResult.commuteReal,
+          },
+          _realCommuteTime: commuteResult.durationMins, // Store for scoring override
+        } as EnrichedNeighborhood;
+      })
+    );
+
+    // 3. Score neighborhoods with real data
+    const scored = scoreNeighborhoods(enrichedNeighborhoods as any, {
       workplaceCoordinates: body.workplaceCoordinates,
       maxCommuteMins: body.maxCommuteMins,
       commuteType: body.commuteType,

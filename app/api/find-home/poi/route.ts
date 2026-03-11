@@ -12,9 +12,9 @@ interface POIData {
 }
 
 // Overpass QL queries for each POI type
-// Searches within 1km (0.009 degree approx) of given coordinates
+// Searches within ~5km (0.05 degree approx) of given coordinates
 const buildOverpassQuery = (lat: number, lng: number, poiType: string): string => {
-  const bbox = `${lat - 0.009},${lng - 0.009},${lat + 0.009},${lng + 0.009}`;
+  const bbox = `${lat - 0.05},${lng - 0.05},${lat + 0.05},${lng + 0.05}`;
 
   const queries: Record<string, string> = {
     parks: `
@@ -92,7 +92,7 @@ async function fetchPOICount(lat: number, lng: number, poiType: string): Promise
 
     const response = await fetch(url, {
       method: 'POST',
-      body: `[out:json];${query}`,
+      body: new URLSearchParams({ data: `[out:json];${query}` }).toString(),
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },

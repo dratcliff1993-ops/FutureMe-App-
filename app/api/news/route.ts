@@ -3,7 +3,7 @@ export async function GET(request: Request) {
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
     
     const response = await fetch(
-      `https://newsapi.org/v2/everything?q=UK+finance+stocks+economy&sortBy=publishedAt&language=en&pageSize=6&apiKey=${apiKey}`
+      `https://newsapi.org/v2/everything?q=UK+personal+finance+OR+savings+OR+mortgages+OR+pensions+OR+tax+OR+budgeting+OR+ISA&sortBy=publishedAt&language=en&pageSize=6&apiKey=${apiKey}`
     );
 
     if (!response.ok) {

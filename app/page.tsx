@@ -669,7 +669,7 @@ export default function Home() {
       </div>
 
       {/* Bifurcated Track Selection - Neomorphic Design */}
-      <div className="pt-12 pb-3 px-4 bg-[#f5f1ed]">
+      <div className="pt-4 pb-3 px-4 bg-[#f5f1ed]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-3">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight">

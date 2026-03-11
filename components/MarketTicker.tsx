@@ -53,7 +53,7 @@ export default function MarketTicker() {
           }
         }
         .ticker-scroll {
-          animation: tickerScroll 180s linear infinite;
+          animation: tickerScroll 400s linear infinite;
         }
         .ticker-scroll:hover {
           animation-play-state: paused;

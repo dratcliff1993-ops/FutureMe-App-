@@ -11,6 +11,7 @@ export default function NeighborhoodDetail() {
     return null;
   }
 
+  const neighborhood = selectedNeighborhood as any;
   const livScore = getLivabilityScore(selectedNeighborhood.id);
   const areaPOIs = getPOIsByAreaId(selectedNeighborhood.areaId);
 
@@ -80,12 +81,38 @@ export default function NeighborhoodDetail() {
                   </div>
                 ))}
               </div>
+              {/* Data Source Attribution */}
+              {neighborhood.dataQuality && (
+                <div className="mt-4 pt-3 border-t border-slate-700/50">
+                  <div className="text-xs text-slate-400 space-y-1">
+                    {neighborhood.dataQuality.crimeReal && neighborhood.crimeData?.source && (
+                      <div className="flex items-center gap-1">
+                        <span>🔒</span>
+                        <span>Safety score: Real data from police.uk</span>
+                      </div>
+                    )}
+                    {!neighborhood.dataQuality.crimeReal && (
+                      <div className="flex items-center gap-1">
+                        <span>📊</span>
+                        <span>Safety score: Estimated</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {/* POIs */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-3">Points of Interest</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-white">Points of Interest</h3>
+              {neighborhood.dataQuality?.poiReal && (
+                <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full font-medium border border-green-500/30">
+                  📍 Real data
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
                 <div className="text-sm font-semibold text-green-400">🌳 Parks</div>

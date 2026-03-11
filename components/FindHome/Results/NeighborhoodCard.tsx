@@ -4,7 +4,14 @@ import { Neighborhood } from '@/lib/data/dummyNeighborhoods';
 import { useFindHomeStore } from '@/lib/stores/useFindHomeStore';
 
 interface NeighborhoodCardProps {
-  neighborhood: Neighborhood & { score?: number; breakdown?: any };
+  neighborhood: Neighborhood & {
+    score?: number;
+    breakdown?: any;
+    dataQuality?: {
+      crimeReal: boolean;
+      poiReal: boolean;
+    };
+  };
 }
 
 export default function NeighborhoodCard({ neighborhood }: NeighborhoodCardProps) {
@@ -71,7 +78,7 @@ export default function NeighborhoodCard({ neighborhood }: NeighborhoodCardProps
         </div>
 
         {/* Highlights */}
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1 mb-3">
           {neighborhood.highlights.slice(0, 3).map((highlight, idx) => (
             <span
               key={idx}
@@ -81,6 +88,22 @@ export default function NeighborhoodCard({ neighborhood }: NeighborhoodCardProps
             </span>
           ))}
         </div>
+
+        {/* Data Quality Badges */}
+        {neighborhood.dataQuality && (neighborhood.dataQuality.crimeReal || neighborhood.dataQuality.poiReal) && (
+          <div className="flex flex-wrap gap-1 pt-2 border-t border-slate-700/50">
+            {neighborhood.dataQuality.crimeReal && (
+              <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full font-medium border border-green-500/30">
+                🔒 Real crime data
+              </span>
+            )}
+            {neighborhood.dataQuality.poiReal && (
+              <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full font-medium border border-green-500/30">
+                📍 Real POI data
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </button>
   );

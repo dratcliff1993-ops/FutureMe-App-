@@ -669,10 +669,10 @@ export default function Home() {
       </div>
 
       {/* Bifurcated Track Selection - Neomorphic Design */}
-      <div className="pt-10 pb-0 px-4 bg-[#f5f1ed]">
+      <div className="py-6 px-4 bg-[#f5f1ed]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-6">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight">
+          <div className="text-center mb-3">
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-2 leading-tight">
               Finances{' '}
               <span className="relative inline-block">
                 shouldn't
@@ -695,7 +695,7 @@ export default function Home() {
           </div>
 
           {/* UK Financial Reality Stats */}
-          <div className="mt-4 mb-6">
+          <div className="mt-2 mb-0">
             <StatsAnimation />
           </div>
 

@@ -37,14 +37,25 @@ interface SearchRequest {
 }
 
 async function enrichWithCrimeData(
-  neighborhood: typeof dummyNeighborhoods[0]
+  neighborhood: typeof dummyNeighborhoods[0],
+  baseUrl: string
 ): Promise<EnrichedNeighborhood> {
   try {
     const coords = neighborhood.coordinates as any;
-    const response = await fetch(
-      `/api/find-home/crime?lat=${coords.lat}&lng=${coords.lng}`,
-      { next: { revalidate: 86400 } } // 24h cache
-    );
+    const url = new URL(`/api/find-home/crime`, baseUrl);
+    url.searchParams.set('lat', coords.lat.toString());
+    url.searchParams.set('lng', coords.lng.toString());
+
+    // 3 second timeout for crime data fetch
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+
+    const response = await fetch(url.toString(), {
+      signal: controller.signal,
+      next: { revalidate: 86400 }
+    });
+
+    clearTimeout(timeout);
 
     if (response.ok) {
       const crimeData = await response.json();
@@ -64,7 +75,7 @@ async function enrichWithCrimeData(
       }
     }
   } catch (error) {
-    console.error(`Crime enrichment error for ${neighborhood.name}:`, error);
+    // Silently handle timeout and other errors - fall back to dummy data
   }
 
   return {
@@ -77,14 +88,25 @@ async function enrichWithCrimeData(
 }
 
 async function enrichWithPOIData(
-  neighborhood: EnrichedNeighborhood
+  neighborhood: EnrichedNeighborhood,
+  baseUrl: string
 ): Promise<EnrichedNeighborhood> {
   try {
     const coords = neighborhood as any;
-    const response = await fetch(
-      `/api/find-home/poi?lat=${coords.coordinates.lat}&lng=${coords.coordinates.lng}`,
-      { next: { revalidate: 604800 } } // 7d cache
-    );
+    const url = new URL(`/api/find-home/poi`, baseUrl);
+    url.searchParams.set('lat', coords.coordinates.lat.toString());
+    url.searchParams.set('lng', coords.coordinates.lng.toString());
+
+    // 5 second timeout for POI data fetch (Overpass can be slower)
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(url.toString(), {
+      signal: controller.signal,
+      next: { revalidate: 604800 }
+    });
+
+    clearTimeout(timeout);
 
     if (response.ok) {
       const poiData = await response.json();
@@ -107,10 +129,7 @@ async function enrichWithPOIData(
       }
     }
   } catch (error) {
-    console.error(
-      `POI enrichment error for ${neighborhood.name}:`,
-      error
-    );
+    // Silently handle timeout and other errors - fall back to dummy data
   }
 
   return neighborhood;
@@ -140,9 +159,13 @@ export async function POST(request: NextRequest) {
 
     // 2. Enrich with real data (crime + POI) in parallel
     // Rate limiting: only fetch top 12 results to respect API fair use
+    const baseUrl = request.headers.get('x-forwarded-proto')
+      ? `${request.headers.get('x-forwarded-proto')}://${request.headers.get('host')}`
+      : 'http://localhost:3002';
+
     const enrichmentPromises = results.slice(0, 12).map(async (neighborhood) => {
-      let enriched = await enrichWithCrimeData(neighborhood as typeof dummyNeighborhoods[0]);
-      enriched = await enrichWithPOIData(enriched);
+      let enriched = await enrichWithCrimeData(neighborhood as typeof dummyNeighborhoods[0], baseUrl);
+      enriched = await enrichWithPOIData(enriched, baseUrl);
       return enriched;
     });
 

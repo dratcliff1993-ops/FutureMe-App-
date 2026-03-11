@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import MarketModal from './MarketModal';
 
 interface MarketData {
   symbol: string;
@@ -12,13 +10,12 @@ interface MarketData {
 }
 
 export default function MarketTicker() {
-  const [selectedMarket, setSelectedMarket] = useState<MarketData | null>(null);
   const [markets, setMarkets] = useState<MarketData[]>([
-    { symbol: 'FTSE 100', price: 8132.45, change: 45.2, changePercent: 0.56 },
-    { symbol: 'FTSE 250', price: 21456.80, change: 78.3, changePercent: 0.37 },
-    { symbol: 'S&P 500', price: 5123.80, change: 32.5, changePercent: 0.64 },
-    { symbol: 'NASDAQ', price: 16245.30, change: -15.3, changePercent: -0.09 },
-    { symbol: 'DAX', price: 18567.90, change: 123.4, changePercent: 0.67 },
+    { symbol: 'Tech Leaders', price: 260.20, change: -0.63, changePercent: -0.24 },
+    { symbol: 'Financials', price: 49.57, change: -0.50, changePercent: -0.99 },
+    { symbol: 'Energy', price: 56.82, change: 1.22, changePercent: 2.19 },
+    { symbol: 'Healthcare', price: 152.68, change: -0.47, changePercent: -0.31 },
+    { symbol: 'Gold', price: 475.58, change: -2.29, changePercent: -0.48 },
   ]);
 
   useEffect(() => {
@@ -61,32 +58,24 @@ export default function MarketTicker() {
       <div className="h-10 flex items-center overflow-hidden">
         <div className="ticker-scroll flex gap-8 whitespace-nowrap">
           {[...markets, ...markets, ...markets, ...markets, ...markets, ...markets, ...markets, ...markets, ...markets, ...markets].map((market, idx) => (
-            <button
+            <div
               key={idx}
-              onClick={() => setSelectedMarket(market)}
-              className="flex items-center gap-2 min-w-max hover:opacity-80 transition cursor-pointer group"
+              className="flex items-center gap-2 min-w-max"
             >
-              <span className="text-white text-xs font-bold uppercase tracking-wider group-hover:text-blue-400 transition">
+              <span className="text-white text-xs font-bold uppercase tracking-wider">
                 {market.symbol}
               </span>
-              <span className="text-white font-bold text-sm group-hover:text-blue-400 transition">
+              <span className="text-white font-bold text-sm">
                 {market.price.toLocaleString('en-GB', { maximumFractionDigits: 2 })}
               </span>
-              <span className={`text-xs font-bold ${market.changePercent >= 0 ? 'text-green-400' : 'text-red-400'} group-hover:opacity-80 transition`}>
+              <span className={`text-xs font-bold ${market.changePercent >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                 {market.changePercent >= 0 ? '↑' : '↓'} {Math.abs(market.changePercent).toFixed(2)}%
               </span>
               <span className="text-white/50 text-xs mx-2">•</span>
-            </button>
+            </div>
           ))}
         </div>
       </div>
-
-      {/* Market Detail Modal */}
-      <AnimatePresence>
-        {selectedMarket && (
-          <MarketModal market={selectedMarket} onClose={() => setSelectedMarket(null)} />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

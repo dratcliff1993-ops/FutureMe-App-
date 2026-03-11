@@ -31,7 +31,7 @@ export default function Home() {
   };
 
   // Tax Calculator State
-  const [salary, setSalary] = useState(0);
+  const [salary, setSalary] = useState(60000);
   const [bonus, setBonus] = useState(0);
   const [dividends, setDividends] = useState(0);
   const [pension, setPension] = useState(0);
@@ -669,9 +669,9 @@ export default function Home() {
       </div>
 
       {/* Bifurcated Track Selection - Neomorphic Design */}
-      <div className="pt-4 pb-3 px-4 bg-[#f5f1ed]">
+      <div className="pt-10 pb-6 px-4 bg-[#f5f1ed]">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-3">
+          <div className="text-center mb-6">
             <h2 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 leading-tight">
               Finances{' '}
               <span className="relative inline-block">
@@ -695,7 +695,7 @@ export default function Home() {
           </div>
 
           {/* UK Financial Reality Stats */}
-          <div className="mt-2 mb-6">
+          <div className="mt-4 mb-6">
             <StatsAnimation />
           </div>
 

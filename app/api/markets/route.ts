@@ -1,33 +1,26 @@
 export async function GET() {
   try {
     // Fetch real crypto prices from CoinGecko
-    const cryptoRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true');
+    const cryptoRes = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=gbp&include_24hr_change=true');
     const cryptoData = await cryptoRes.json();
 
     const markets = [];
 
-    // Bitcoin
+    // Bitcoin - real data from CoinGecko
     if (cryptoData.bitcoin) {
       markets.push({
         symbol: 'Bitcoin',
-        price: cryptoData.bitcoin.usd,
+        price: cryptoData.bitcoin.gbp,
         change: 0,
-        changePercent: cryptoData.bitcoin.usd_24h_change || 0
+        changePercent: cryptoData.bitcoin.gbp_24h_change || 0
       });
     }
 
-    // Ethereum as Gold proxy (since commodity data is hard to get)
-    if (cryptoData.ethereum) {
-      markets.push({
-        symbol: 'Gold',
-        price: cryptoData.ethereum.usd,
-        change: 0,
-        changePercent: cryptoData.ethereum.usd_24h_change || 0
-      });
-    }
+    // Fetch stock data from Alpha Vantage (free tier)
+    const alphaKey = 'demo';
 
-    // Stock indices from Finnhub
     const tickers = [
+      { symbol: 'GLD', display: 'Gold' },
       { symbol: 'QQQ', display: 'NASDAQ-100' },
       { symbol: 'DIA', display: 'Dow Jones' },
       { symbol: 'SPY', display: 'S&P 500' },
@@ -38,20 +31,28 @@ export async function GET() {
       { symbol: 'EWP', display: 'Spain IBEX' }
     ];
 
-    const finnhubKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
     const stockPromises = tickers.map(async ({ symbol, display }) => {
       try {
-        const res = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${finnhubKey}`);
+        const res = await fetch(
+          `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${alphaKey}`
+        );
         const data = await res.json();
-        if (data.c) {
+
+        if (data['Global Quote'] && data['Global Quote']['05. price']) {
+          const price = parseFloat(data['Global Quote']['05. price']);
+          const change = parseFloat(data['Global Quote']['09. change']) || 0;
+          const changePercent = parseFloat(data['Global Quote']['10. change percent']?.replace('%', '')) || 0;
+
           return {
             symbol: display,
-            price: data.c,
-            change: data.d || 0,
-            changePercent: data.dp || 0
+            price: price,
+            change: change,
+            changePercent: changePercent
           };
         }
-      } catch {}
+      } catch (e) {
+        console.error(`Failed to fetch ${symbol}:`, e);
+      }
       return null;
     });
 

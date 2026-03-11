@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import MarketTicker from '@/components/MarketTicker';
+import NewsTicker from '@/components/NewsTicker';
 import FinanceNews from '@/components/FinanceNews';
 
 export default function Home() {
@@ -702,8 +702,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Market Ticker & News Section */}
-      <MarketTicker />
+      {/* News Ticker */}
+      <NewsTicker />
       <FinanceNews />
 
       {/* Feature Section - Why It Pays to Invest */}

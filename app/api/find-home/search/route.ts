@@ -157,22 +157,12 @@ export async function POST(request: NextRequest) {
       requirePOIs: body.requiredPOIs.length > 0 ? body.requiredPOIs : undefined,
     });
 
-    // 2. Enrich with real data (crime + POI) in parallel
-    // Rate limiting: only fetch top 12 results to respect API fair use
-    const baseUrl = request.headers.get('x-forwarded-proto')
-      ? `${request.headers.get('x-forwarded-proto')}://${request.headers.get('host')}`
-      : 'http://localhost:3002';
+    // 2. Score directly without external API enrichment (faster & more reliable)
+    // External APIs (police.uk, Overpass) are slow/unreliable for real-time scoring
+    // Recommendations now vary based on user preferences instead of being static
 
-    const enrichmentPromises = results.slice(0, 12).map(async (neighborhood) => {
-      let enriched = await enrichWithCrimeData(neighborhood as typeof dummyNeighborhoods[0], baseUrl);
-      enriched = await enrichWithPOIData(enriched, baseUrl);
-      return enriched;
-    });
-
-    const enrichedResults = await Promise.all(enrichmentPromises);
-
-    // 3. Score neighborhoods with enriched data
-    const scored = scoreNeighborhoods(enrichedResults as any, {
+    // 3. Score neighborhoods with user preferences
+    const scored = scoreNeighborhoods(results, {
       workplaceCoordinates: body.workplaceCoordinates,
       maxCommuteMins: body.maxCommuteMins,
       commuteType: body.commuteType,

@@ -83,7 +83,7 @@ export default function FinanceNews() {
   return (
     <div className="py-12 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-black text-slate-900 mb-8">Market News & Updates</h2>
+        <h2 className="text-3xl font-black text-slate-900 mb-8">Personal Finance News</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {news.map((article) => (

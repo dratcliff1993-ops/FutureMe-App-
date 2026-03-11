@@ -1,8 +1,6 @@
 'use client';
 
-import { dummyNeighborhoods } from '@/lib/data/dummyNeighborhoods';
 import { useFindHomeStore } from '@/lib/stores/useFindHomeStore';
-import { scoreNeighborhoods, filterNeighborhoodsByConstraints } from '@/lib/utils/scoringEngine';
 
 export default function SearchButton() {
   const {
@@ -26,37 +24,39 @@ export default function SearchButton() {
     setError(null);
 
     try {
-      // Simulate a slight delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Filter neighborhoods by city
-      let results = dummyNeighborhoods.filter((n) => n.city === selectedCity);
-
-      // Apply hard constraints
-      results = filterNeighborhoodsByConstraints(results, {
-        maxCommuteMins,
-        maxHousePrice,
-        minHousePrice,
-        requirePOIs: requiredPOIs.length > 0 ? requiredPOIs : undefined,
+      // Call orchestrator API to enrich with real data + score
+      const response = await fetch('/api/find-home/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          selectedCity,
+          maxCommuteMins,
+          commuteType,
+          maxHousePrice,
+          minHousePrice,
+          workplaceCoordinates,
+          requiredPOIs,
+          minPOICount,
+          priorityCategories,
+          demographic,
+        }),
       });
 
-      // Score remaining neighborhoods
-      const scored = scoreNeighborhoods(results, {
-        workplaceCoordinates,
-        maxCommuteMins,
-        commuteType,
-        preferredScore: 70,
-        priorityCategories,
-        demographic,
-        maxHousePrice,
-        minHousePrice,
-        requiredPOIs,
-        minPOICount,
-      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Search failed');
+      }
 
-      setFilteredNeighborhoods(scored as any);
+      const scored = await response.json();
+      setFilteredNeighborhoods(scored);
     } catch (error) {
-      setError('Failed to search neighborhoods. Please try again.');
+      setError(
+        error instanceof Error
+          ? error.message
+          : 'Failed to search neighborhoods. Please try again.'
+      );
       console.error(error);
     } finally {
       setLoading(false);

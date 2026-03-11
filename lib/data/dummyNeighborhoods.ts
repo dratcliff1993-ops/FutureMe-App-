@@ -45,7 +45,7 @@ export const dummyNeighborhoods: Neighborhood[] = [
     poiCounts: { parks: 12, pubs: 145, museums: 8, restaurants: 320, gyms: 28, schools: 15 },
     description: 'Young, vibrant neighborhood with tech scene, street art, and trendy venues',
     highlights: ['Tech startups', 'Street art', 'Nightlife', 'Creative scene'],
-    imageUrl: 'https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=400&h=300&fit=crop',
   },
   {
     id: 'clapham',
@@ -65,7 +65,7 @@ export const dummyNeighborhoods: Neighborhood[] = [
     poiCounts: { parks: 18, pubs: 98, museums: 4, restaurants: 210, gyms: 22, schools: 24 },
     description: 'Thriving south London village with family-friendly vibe and common green space',
     highlights: ['Family-friendly', 'Clapham Common', 'Independent shops', 'Social scene'],
-    imageUrl: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=400&h=300&fit=crop',
   },
   {
     id: 'wimbledon',
@@ -85,7 +85,7 @@ export const dummyNeighborhoods: Neighborhood[] = [
     poiCounts: { parks: 22, pubs: 72, museums: 3, restaurants: 145, gyms: 18, schools: 32 },
     description: 'Leafy, affluent suburb with parks and village feel, popular with families',
     highlights: ['Wimbledon Common', 'Safe & green', 'Village high street', 'Family homes'],
-    imageUrl: 'https://images.unsplash.com/photo-1508312990849-930d41907d4d?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1511649475669-e8fe1da691db?w=400&h=300&fit=crop',
   },
   {
     id: 'islington',
@@ -105,7 +105,7 @@ export const dummyNeighborhoods: Neighborhood[] = [
     poiCounts: { parks: 14, pubs: 128, museums: 6, restaurants: 280, gyms: 25, schools: 20 },
     description: 'Vibrant north London with independent culture, markets, and gastropubs',
     highlights: ['Angel Market', 'Independent venues', 'Culture', 'Walkable'],
-    imageUrl: 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
   },
   {
     id: 'bethnal-green',
@@ -225,7 +225,7 @@ export const dummyNeighborhoods: Neighborhood[] = [
     poiCounts: { parks: 19, pubs: 85, museums: 3, restaurants: 165, gyms: 19, schools: 28 },
     description: 'River-side village with upscale dining, rowing clubs, and family appeal',
     highlights: ['River Thames', 'Upscale dining', 'Rowing culture', 'Green spaces'],
-    imageUrl: 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
   },
   {
     id: 'central-manchester',
@@ -265,6 +265,6 @@ export const dummyNeighborhoods: Neighborhood[] = [
     poiCounts: { parks: 14, pubs: 95, museums: 7, restaurants: 185, gyms: 18, schools: 20 },
     description: 'Upscale Georgian village with green spaces, independent shops, and cultural institutions',
     highlights: ['Georgian architecture', 'Clifton Triangle', 'Green spaces', 'Culture'],
-    imageUrl: 'https://images.unsplash.com/photo-1508312990849-930d41907d4d?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1511649475669-e8fe1da691db?w=400&h=300&fit=crop',
   },
 ];

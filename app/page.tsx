@@ -3,10 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import MarketTicker from '@/components/MarketTicker';
+import FinanceNews from '@/components/FinanceNews';
 
 export default function Home() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [dropdownPos, setDropdownPos] = useState({ x: 0, y: 0 });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [chartProgress, setChartProgress] = useState(1);
   const [hoveredYear, setHoveredYear] = useState<number | null>(null);
   const chartRef = React.useRef<SVGPolylineElement>(null);
@@ -532,6 +535,11 @@ export default function Home() {
             </Link>
           </nav>
           <div className="flex gap-2 sm:gap-4 items-center">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-[#f5f1ed] hover:text-white transition">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
             <button className="text-xs sm:text-base text-[#f5f1ed] hover:text-[#f5f1ed]/70 transition">Log in</button>
             <button className="bg-white text-primary-600 px-3 sm:px-6 py-1 sm:py-2 text-xs sm:text-base rounded-full font-semibold hover:bg-gray-100 transition">
               Sign up
@@ -570,6 +578,44 @@ export default function Home() {
             </div>
           </motion.div>
         )}
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden bg-black/90 backdrop-blur-md border-b border-white/10 overflow-hidden"
+          >
+            <div className="px-4 py-4 flex flex-col gap-4">
+              {navItems.map((item) => (
+                <div key={item.label}>
+                  <button onClick={() => setOpenDropdown(openDropdown === item.label ? null : item.label)} className="text-[#f5f1ed] font-medium text-sm w-full text-left py-2 hover:text-white transition">
+                    {item.label}
+                  </button>
+                  {openDropdown === item.label && (
+                    <div className="pl-4 flex flex-col gap-2 mt-2">
+                      {item.items.map((subItem) => (
+                        <Link
+                          key={subItem.title}
+                          href={subItem.href}
+                          className="text-[#f5f1ed]/70 text-sm py-1 hover:text-white transition"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {subItem.title}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+              <Link href="/calculator-help" className="text-[#f5f1ed] hover:text-white transition font-medium text-sm py-2">
+                FAQs
+              </Link>
+            </div>
+          </motion.div>
+        )}
       </header>
 
       {/* Hero Section - Two Column Layout */}
@@ -601,22 +647,19 @@ export default function Home() {
                 .
               </motion.span>
             </h1>
-            <p className="text-lg text-[#f5f1ed] mb-8 leading-relaxed max-w-4xl">
-              Figuring out taxes, investing, and saving shouldn't be a solo mission.<br />
-              FutureMe is the jargon-free hub designed to bridge the UK's advice gap.<br />
-              <br />
-              We're changing that.
+            <p className="text-sm sm:text-lg text-[#f5f1ed] mb-8 leading-relaxed max-w-2xl">
+              Figuring out taxes, investing, and saving shouldn't be a solo mission. FutureMe is the jargon-free hub designed to bridge the UK's advice gap. We're changing that.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 mt-8">
               <Link href="/guided" className="group">
-                <button className="w-full sm:w-auto bg-white text-primary-600 px-4 sm:px-8 py-2 sm:py-3 rounded-full font-extrabold hover:bg-gray-100 transition shadow-lg text-sm sm:text-base">
+                <button className="min-w-[140px] bg-white text-primary-600 px-6 sm:px-8 py-2 sm:py-3 rounded-full font-extrabold hover:bg-gray-100 transition shadow-lg text-sm sm:text-base">
                   Guide Me
                 </button>
               </Link>
               <Link href="/expert" className="group">
-                <button className="w-full sm:w-auto bg-black/15 backdrop-blur-md text-[#f5f1ed] px-4 sm:px-8 py-2 sm:py-3 rounded-full font-semibold border border-white/40 hover:bg-black/25 transition text-sm sm:text-base">
+                <button className="min-w-[140px] bg-black/15 backdrop-blur-md text-[#f5f1ed] px-6 sm:px-8 py-2 sm:py-3 rounded-full font-semibold border border-white/40 hover:bg-black/25 transition text-sm sm:text-base">
                   Expert Mode
                 </button>
               </Link>
@@ -659,73 +702,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Scrolling Resources Section */}
-      <div className="py-6 px-4 bg-white border-y border-gray-200">
-        <div className="overflow-hidden">
-          <div className="flex gap-12 animate-scroll whitespace-nowrap items-center">
-            {[
-              { name: 'Freetrade', logo: 'ft' },
-              { name: 'eToro', logo: 'et' },
-              { name: 'Interactive Investor', logo: 'ii' },
-              { name: 'Hargreaves Lansdown', logo: 'hl' },
-              { name: 'AJ Bell', logo: 'aj' },
-              { name: 'HMRC', logo: 'hmrc' },
-              { name: 'Wealthify', logo: 'wf' },
-              { name: 'Vanguard', logo: 'vg' },
-              { name: 'Nutmeg', logo: 'nm' },
-              { name: 'Interactive Investor', logo: 'ii' },
-              { name: 'Freetrade', logo: 'ft' },
-              { name: 'eToro', logo: 'et' },
-              { name: 'HMRC', logo: 'hmrc' },
-              { name: 'Hargreaves Lansdown', logo: 'hl' },
-            ].map((platform, idx) => {
-              const getPlatformLogo = (code: string) => {
-                switch(code) {
-                  case 'ft': return <img src="/images/freetrade-logo.png" alt="Freetrade" className="w-8 h-8 object-contain rounded" />;
-                  case 'et': return <img src="/images/etoro-logo.png" alt="eToro" className="w-8 h-8 object-contain rounded" />;
-                  case 'dg': return <svg viewBox="0 0 100 100" className="w-8 h-8"><rect width="100" height="100" fill="#FF6B35" rx="12"/><text x="50" y="72" fontSize="60" fontWeight="900" fill="white" textAnchor="middle" fontFamily="Arial">D</text></svg>;
-                  case 'hl': return <img src="/images/hl-logo.png" alt="Hargreaves Lansdown" className="w-8 h-8 object-contain rounded" />;
-                  case 'aj': return <img src="/images/aj-logo.png" alt="AJ Bell" className="w-8 h-8 object-contain rounded" />;
-                  case 'ii': return <img src="/images/ii-logo.png" alt="Interactive Investor" className="w-8 h-8 object-contain rounded" />;
-                  case 'hmrc': return <img src="/images/hmrc-logo.png" alt="HMRC" className="w-8 h-8 object-contain rounded" />;
-                  case 'wf': return <svg viewBox="0 0 100 100" className="w-8 h-8"><defs><linearGradient id="wfGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style={{stopColor:'#FF6B5B', stopOpacity:1}} /><stop offset="100%" style={{stopColor:'#FF8C42', stopOpacity:1}} /></linearGradient></defs><rect width="100" height="100" fill="url(#wfGrad)" rx="12"/><text x="50" y="72" fontSize="55" fontWeight="900" fill="white" textAnchor="middle" fontFamily="Arial">W</text></svg>;
-                  case 'vg': return <svg viewBox="0 0 100 100" className="w-8 h-8"><rect width="100" height="100" fill="#1a1a1a" rx="12"/><circle cx="35" cy="50" r="14" fill="#D4AF37"/><circle cx="65" cy="50" r="14" fill="#D4AF37"/></svg>;
-                  case 'nm': return <svg viewBox="0 0 100 100" className="w-8 h-8"><rect width="100" height="100" fill="#0EA5E9" rx="12"/><circle cx="40" cy="40" r="10" fill="white" opacity="0.9"/><circle cx="60" cy="60" r="10" fill="white" opacity="0.9"/><circle cx="50" cy="50" r="8" fill="white"/></svg>;
-                  default: return null;
-                }
-              };
-
-              return (
-                <div
-                  key={idx}
-                  className="flex flex-col items-center justify-center gap-3 min-w-max px-16"
-                >
-                  <div className="w-12 h-12 rounded-lg flex items-center justify-center">
-                    {getPlatformLogo(platform.logo)}
-                  </div>
-                  <div className="text-sm font-semibold text-slate-600">{platform.name}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        <style>{`
-          @keyframes scroll {
-            0% {
-              transform: translateX(0);
-            }
-            100% {
-              transform: translateX(-50%);
-            }
-          }
-          .animate-scroll {
-            animation: scroll 30s linear infinite;
-          }
-          .animate-scroll:hover {
-            animation-play-state: paused;
-          }
-        `}</style>
-      </div>
+      {/* Market Ticker & News Section */}
+      <MarketTicker />
+      <FinanceNews />
 
       {/* Feature Section - Why It Pays to Invest */}
       <div className="py-24 px-4 bg-gradient-to-b from-black to-slate-950 border-t border-white/10 chart-section" ref={chartSectionRef}>

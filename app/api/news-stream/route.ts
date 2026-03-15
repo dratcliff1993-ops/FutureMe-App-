@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       });
     }
 
-    const newsUrl = `https://api.worldnewsapi.com/search-news?text=finance%20OR%20stock%20OR%20market%20OR%20banking%20OR%20investment%20OR%20economy&number=10`;
+    const newsUrl = `https://api.worldnewsapi.com/search-news?text=stock%20market%20OR%20financial%20news%20OR%20banking%20OR%20investment%20OR%20economy%20OR%20cryptocurrency%20OR%20forex&number=10&sort=publish_date`;
     console.log('Fetching from World News API...');
 
     const response = await fetch(newsUrl, {

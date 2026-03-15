@@ -10,7 +10,7 @@ async function fetchLatestNews() {
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
 
     const response = await fetch(
-      `https://newsapi.org/v2/everything?q=UK+finance+stocks+economy&sortBy=publishedAt&language=en&pageSize=6&apiKey=${apiKey}`
+      `https://newsapi.org/v2/top-headlines?country=gb&category=business&pageSize=6&apiKey=${apiKey}`
     );
 
     if (!response.ok) {

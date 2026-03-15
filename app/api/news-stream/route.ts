@@ -1,48 +1,52 @@
 export async function GET(request: Request) {
   try {
-    const apiKey = process.env.NEXT_PUBLIC_FINNHUB_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
 
     if (!apiKey) {
-      console.error('Finnhub API key not configured');
+      console.error('World News API key not configured');
       return new Response(JSON.stringify({ error: 'API key missing' }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const newsUrl = `https://finnhub.io/api/v1/news?category=general&token=${apiKey}&limit=6`;
-    console.log('Fetching from Finnhub...');
+    const newsUrl = `https://api.worldnewsapi.com/search-news?text=business&number=6`;
+    console.log('Fetching from World News API...');
 
-    const response = await fetch(newsUrl);
+    const response = await fetch(newsUrl, {
+      headers: {
+        'x-api-key': apiKey,
+      },
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Finnhub error:', response.status, errorText);
-      return new Response(JSON.stringify({ error: `Finnhub returned ${response.status}` }), {
+      console.error('World News API error:', response.status, errorText);
+      return new Response(JSON.stringify({ error: `World News API returned ${response.status}` }), {
         status: 502,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
     const data = await response.json();
-    console.log('Finnhub response:', data.length, 'articles available');
+    console.log('World News API response:', data.news?.length, 'articles available');
 
-    if (!Array.isArray(data) || data.length === 0) {
-      console.warn('No articles returned from Finnhub');
+    if (!data.news || data.news.length === 0) {
+      console.warn('No articles returned from World News API');
       return new Response(JSON.stringify([]), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       });
     }
 
-    const articles = data.map((article: any) => ({
-      id: article.id || article.url,
-      title: article.headline,
-      description: article.summary || article.headline,
-      source: article.source,
+    const articles = data.news.map((article: any) => ({
+      id: article.id.toString(),
+      title: article.title,
+      description: article.summary || article.text?.substring(0, 150),
+      source: article.source_country?.toUpperCase() || 'News',
       url: article.url,
       imageUrl: article.image,
-      publishedAt: new Date(article.datetime * 1000).toISOString()
+      publishedAt: article.publish_date
     }));
 
     console.log('Returning', articles.length, 'formatted articles');

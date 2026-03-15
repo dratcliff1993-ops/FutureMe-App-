@@ -44,9 +44,24 @@ export default function FinanceNews() {
     const fetchNews = async () => {
       try {
         const response = await fetch('/api/news-stream');
-        const articles = await response.json();
 
-        if (Array.isArray(articles) && articles.length > 0) {
+        if (!response.ok) {
+          console.error('News API returned:', response.status);
+          return;
+        }
+
+        const data = await response.json();
+
+        // Check if response is an error object
+        if (data.error) {
+          console.error('News API error:', data.error);
+          return;
+        }
+
+        // Ensure we have an array
+        const articles = Array.isArray(data) ? data : [];
+
+        if (articles.length > 0) {
           const formattedNews = articles.map((article: any) => ({
             id: article.id || article.title,
             title: article.title,

@@ -3,6 +3,9 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useState, useRef } from 'react';
+import { Space_Grotesk } from 'next/font/google';
+
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
 export default function SelfAssessment() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -55,7 +58,7 @@ export default function SelfAssessment() {
   ];
 
   return (
-    <main className="min-h-screen bg-white w-full">
+    <main className={`${spaceGrotesk.className} min-h-screen bg-white w-full`}>
       {/* Navigation Header */}
       <header className="fixed top-0 w-full z-[9999] backdrop-blur-sm bg-white/95 border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -297,21 +300,6 @@ export default function SelfAssessment() {
               <p className="text-gray-600 text-sm">Last day to file online return and pay tax in full. Second payment on account due.</p>
             </motion.div>
           </div>
-        </motion.div>
-
-        {/* Image Break - Small Business */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="my-16"
-        >
-          <img
-            src="/self-assessment-coffee.jpg"
-            alt="Small business owner"
-            className="w-full h-80 object-cover rounded-2xl shadow-sm"
-          />
         </motion.div>
 
         {/* Allowable Expenses */}

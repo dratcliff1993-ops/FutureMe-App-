@@ -3,20 +3,39 @@ export async function GET(request: Request) {
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
 
     if (!apiKey) {
-      return new Response('API key not configured', { status: 500 });
+      console.error('NewsAPI key not configured');
+      return new Response(JSON.stringify({ error: 'API key missing' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    const response = await fetch(
-      `https://newsapi.org/v2/top-headlines?country=gb&category=business&pageSize=6&apiKey=${apiKey}`
-    );
+    const newsUrl = `https://newsapi.org/v2/top-headlines?country=gb&category=business&pageSize=6&apiKey=${apiKey}`;
+    console.log('Fetching from NewsAPI...');
+
+    const response = await fetch(newsUrl);
 
     if (!response.ok) {
-      return new Response('NewsAPI request failed', { status: 502 });
+      const errorText = await response.text();
+      console.error('NewsAPI error:', response.status, errorText);
+      return new Response(JSON.stringify({ error: `NewsAPI returned ${response.status}` }), {
+        status: 502,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
     const data = await response.json();
+    console.log('NewsAPI response:', data.totalResults, 'articles available');
 
-    const articles = (data.articles || []).map((article: any) => ({
+    if (!data.articles || data.articles.length === 0) {
+      console.warn('No articles returned from NewsAPI');
+      return new Response(JSON.stringify([]), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    const articles = data.articles.map((article: any) => ({
       id: article.url,
       title: article.title,
       description: article.description,
@@ -26,21 +45,21 @@ export async function GET(request: Request) {
       publishedAt: article.publishedAt
     }));
 
-    // Return as JSON, not SSE format
+    console.log('Returning', articles.length, 'formatted articles');
+
     return new Response(JSON.stringify(articles), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'public, max-age=60',
         'Access-Control-Allow-Origin': '*',
       },
     });
   } catch (error) {
-    console.error('News API error:', error);
-    return new Response(JSON.stringify([]), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    console.error('News API error:', error instanceof Error ? error.message : error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 }

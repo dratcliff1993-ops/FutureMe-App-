@@ -1502,10 +1502,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-
-          <div className="border-t border-white/10 pt-8 text-center text-white/60 text-sm">
-            <p>© 2025 FutureMe.</p>
-          </div>
         </div>
       </footer>
     </main>

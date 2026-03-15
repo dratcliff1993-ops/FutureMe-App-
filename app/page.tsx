@@ -1455,7 +1455,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-black py-12 px-4">
+      <footer className="bg-black py-8 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             {/* Logo */}

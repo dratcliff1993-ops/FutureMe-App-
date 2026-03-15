@@ -26,32 +26,7 @@ function formatTimeAgo(dateString: string): string {
 }
 
 export default function FinanceNews() {
-  const [news, setNews] = useState<NewsArticle[]>([
-    {
-      id: '1',
-      title: 'Bank of England Holds Interest Rates at 5.25%',
-      description: 'The Bank of England maintained its base rate, signaling a pause in the tightening cycle as inflation continues to cool.',
-      source: 'BBC News',
-      url: '#',
-      publishedAt: '2 hours ago'
-    },
-    {
-      id: '2',
-      title: 'FTSE 100 Rises on Banking Sector Gains',
-      description: 'London Stock Exchange hits 8-month high as major banks report strong quarterly earnings.',
-      source: 'Financial Times',
-      url: '#',
-      publishedAt: '4 hours ago'
-    },
-    {
-      id: '3',
-      title: 'Inflation Falls to 3.9% in Latest Data',
-      description: 'Consumer prices continue their downward trend, bringing relief to households and policymakers.',
-      source: 'The Times',
-      url: '#',
-      publishedAt: '6 hours ago'
-    },
-  ]);
+  const [news, setNews] = useState<NewsArticle[]>([]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 

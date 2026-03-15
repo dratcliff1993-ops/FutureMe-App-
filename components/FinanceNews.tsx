@@ -66,12 +66,14 @@ export default function FinanceNews() {
   };
 
   useEffect(() => {
-    const fetchNews = async () => {
+    // Connect to SSE stream for real-time news updates
+    const eventSource = new EventSource('/api/news-stream');
+
+    eventSource.onmessage = (event) => {
       try {
-        const response = await fetch('/api/news');
-        const data = await response.json();
-        if (data.articles && data.articles.length > 0) {
-          const formattedNews = data.articles.map((article: any) => ({
+        const articles = JSON.parse(event.data);
+        if (articles && articles.length > 0) {
+          const formattedNews = articles.map((article: any) => ({
             id: article.id || article.title,
             title: article.title,
             description: article.description,
@@ -83,13 +85,17 @@ export default function FinanceNews() {
           setNews(formattedNews);
         }
       } catch (error) {
-        console.error('Failed to fetch news:', error);
+        console.error('Failed to parse news:', error);
       }
     };
 
-    fetchNews();
-    const interval = setInterval(fetchNews, 300000);
-    return () => clearInterval(interval);
+    eventSource.onerror = (error) => {
+      console.error('News stream error:', error);
+      eventSource.close();
+    };
+
+    // Clean up connection on unmount
+    return () => eventSource.close();
   }, []);
 
   return (

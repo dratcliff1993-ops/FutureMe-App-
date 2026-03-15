@@ -39,7 +39,14 @@ export default function NewsTicker() {
     const fetchNews = async () => {
       try {
         const response = await fetch('/api/news-stream');
+
+        if (!response.ok) {
+          console.error('News API returned status:', response.status);
+          return;
+        }
+
         const data = await response.json();
+        console.log('Ticker fetched articles:', data?.length);
 
         if (Array.isArray(data) && data.length > 0) {
           const formattedNews = data.map((article: any) => {
@@ -60,9 +67,10 @@ export default function NewsTicker() {
             };
           });
           setNews(formattedNews);
+          console.log('Ticker updated with', formattedNews.length, 'articles');
         }
       } catch (error) {
-        console.error('Failed to fetch news:', error);
+        console.error('Failed to fetch ticker news:', error instanceof Error ? error.message : error);
       }
     };
 

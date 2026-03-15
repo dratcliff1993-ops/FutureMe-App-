@@ -701,16 +701,9 @@ export default function Home() {
       <div className="py-24 px-4 bg-gradient-to-b from-black to-slate-950 border-t border-white/10 chart-section" ref={chartSectionRef}>
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-4">Why it pays to invest<motion.span
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="text-5xl md:text-6xl font-black text-white"
-            >
-              .
-            </motion.span></h2>
-            <p className="text-lg text-white/80 max-w-3xl mx-auto leading-relaxed">
-              Stocks & Shares ISAs historically deliver 7-10% annual returns vs 4-5% from Cash ISAs.<br />
-              See the difference compound over time.
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-3">Why it pays to invest</h2>
+            <p className="text-base text-white/70 max-w-3xl mx-auto leading-relaxed">
+              Stocks & Shares ISAs historically deliver 7-10% annual returns vs 4-5% from Cash ISAs. See the difference compound over time.
             </p>
           </div>
 
@@ -720,43 +713,43 @@ export default function Home() {
             <div className="flex flex-col flex-1">
               <div className="mb-4 space-y-4">
                 <div>
-                  <label className="text-white/80 text-sm font-medium mb-2 block">Initial Investment (£)</label>
-                  <input type="text" inputMode="numeric" value={investmentAmount.toString()} onChange={(e) => {const num = parseInt(e.target.value.replace(/[^\d]/g, '')) || 0; setInvestmentAmount(Math.max(0, num));}} className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white text-sm w-full focus:outline-none focus:border-white/40" placeholder="10000" />
+                  <label className="text-white/70 text-xs font-medium mb-2 block uppercase tracking-wide">Initial Investment (£)</label>
+                  <input type="text" inputMode="numeric" value={investmentAmount.toString()} onChange={(e) => {const num = parseInt(e.target.value.replace(/[^\d]/g, '')) || 0; setInvestmentAmount(Math.max(0, num));}} className="bg-white/8 rounded-lg px-4 py-3 text-white text-sm w-full focus:outline-none focus:ring-2 focus:ring-white/30 shadow-sm transition" placeholder="10000" />
                 </div>
                 <div>
-                  <label className="text-white/80 text-sm font-medium mb-2 block">Investment Period (years)</label>
-                  <input type="number" value={investmentYears} onChange={(e) => setInvestmentYears(e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value) || 0))} className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white text-sm w-full focus:outline-none focus:border-white/40" placeholder="years" />
+                  <label className="text-white/70 text-xs font-medium mb-2 block uppercase tracking-wide">Investment Period (years)</label>
+                  <input type="number" value={investmentYears} onChange={(e) => setInvestmentYears(e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value) || 0))} className="bg-white/8 rounded-lg px-4 py-3 text-white text-sm w-full focus:outline-none focus:ring-2 focus:ring-white/30 shadow-sm transition" placeholder="years" />
                 </div>
                 <div>
-                  <label className="text-white/80 text-sm font-medium mb-2 block">Monthly Contribution (£)</label>
-                  <input type="text" inputMode="numeric" value={monthlyContribution.toString()} onChange={(e) => {const num = parseInt(e.target.value.replace(/[^\d]/g, '')) || 0; setMonthlyContribution(Math.max(0, num));}} className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white text-sm w-full focus:outline-none focus:border-white/40" placeholder="0" />
+                  <label className="text-white/70 text-xs font-medium mb-2 block uppercase tracking-wide">Monthly Contribution (£)</label>
+                  <input type="text" inputMode="numeric" value={monthlyContribution.toString()} onChange={(e) => {const num = parseInt(e.target.value.replace(/[^\d]/g, '')) || 0; setMonthlyContribution(Math.max(0, num));}} className="bg-white/8 rounded-lg px-4 py-3 text-white text-sm w-full focus:outline-none focus:ring-2 focus:ring-white/30 shadow-sm transition" placeholder="0" />
                 </div>
               </div>
 
               {/* Comparison */}
               <div className="space-y-3">
-                <div className="bg-black/10 rounded-2xl p-4 border border-white/20">
-                  <p className="text-white/60 text-sm mb-1">Cash ISA Annual Return</p>
-                  <p className="text-2xl font-bold text-white">4-5%</p>
-                  <p className="text-white/50 text-xs mt-2">{investmentYears}-year outcome: £{cashIsaOutcome.toLocaleString()}</p>
+                <div className="bg-white/5 rounded-xl p-4 shadow-sm">
+                  <p className="text-white/60 text-xs font-medium uppercase tracking-wide mb-2">Cash ISA Annual Return</p>
+                  <p className="text-xl font-semibold text-white">4-5%</p>
+                  <p className="text-white/50 text-xs mt-2">{investmentYears}y outcome: £{cashIsaOutcome.toLocaleString()}</p>
                 </div>
-                <div className="bg-emerald-500/20 rounded-2xl p-4 border border-emerald-500/40">
-                  <p className="text-emerald-300 text-sm mb-1">S&S ISA Average Return</p>
-                  <p className="text-2xl font-bold text-emerald-400">7-10%</p>
-                  <p className="text-emerald-300 text-xs mt-2">{investmentYears}-year outcome: £{ssIsaOutcome.toLocaleString()}</p>
+                <div className="bg-emerald-500/15 rounded-xl p-4 shadow-sm">
+                  <p className="text-emerald-300/90 text-xs font-medium uppercase tracking-wide mb-2">S&S ISA Average Return</p>
+                  <p className="text-xl font-semibold text-emerald-300">7-10%</p>
+                  <p className="text-emerald-300/70 text-xs mt-2">{investmentYears}y outcome: £{ssIsaOutcome.toLocaleString()}</p>
                 </div>
               </div>
 
               {/* Why Invest Explanation - Animated */}
-              <div className="mt-8 pt-6 border-t border-white/30">
+              <div className="mt-8 pt-6">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.2 }}
                   viewport={{ once: true }}
-                  className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 rounded-2xl p-6 border border-emerald-500/20"
+                  className="bg-white/5 rounded-xl p-5 shadow-sm"
                 >
-                  <h4 className="text-white font-semibold mb-4 text-lg">Why It Pays To Invest</h4>
+                  <h4 className="text-white font-semibold mb-4 text-sm">Why It Pays To Invest</h4>
                   <div className="space-y-4">
                     {[
                       { label: 'Compound Growth', value: 'Each year your investment grows, and the growth itself starts earning returns. Over 20 years, this exponential effect can turn modest investments into substantial wealth.' },
@@ -785,13 +778,13 @@ export default function Home() {
 
             {/* Chart */}
             <div className="flex justify-center flex-1">
-              <div className="w-full bg-black rounded-2xl p-6 flex flex-col relative">
+              <div className="w-full bg-white/5 rounded-xl p-6 flex flex-col relative shadow-sm">
                 {/* Chart Header */}
                 <div className="mb-6">
                   <div>
-                    <p className="text-white/60 text-xs uppercase tracking-widest">Initial Investment</p>
-                    <h3 className="text-3xl font-bold text-white mt-1">£{investmentAmount.toLocaleString()}</h3>
-                    <p className="text-white/50 text-sm mt-2">Compound Growth Over {investmentYears} Years</p>
+                    <p className="text-white/60 text-xs uppercase tracking-wide font-medium">Initial Investment</p>
+                    <h3 className="text-2xl font-semibold text-white mt-1">£{investmentAmount.toLocaleString()}</h3>
+                    <p className="text-white/50 text-xs mt-2">Compound growth over {investmentYears} years</p>
                   </div>
                 </div>
 
@@ -949,7 +942,7 @@ export default function Home() {
                     <p className="text-white/60 text-xs uppercase tracking-widest">Power of Compounding</p>
 
                     {/* Cash ISA Breakdown */}
-                    <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="bg-white/5 rounded-lg p-4 shadow-sm">
                       <p className="text-white/80 text-sm font-semibold mb-3">Cash ISA</p>
                       <div className="space-y-2 text-xs">
                         <div className="flex justify-between">
@@ -968,7 +961,7 @@ export default function Home() {
                     </div>
 
                     {/* S&S ISA Breakdown */}
-                    <div className="bg-emerald-500/10 rounded-lg p-4 border border-emerald-500/20">
+                    <div className="bg-emerald-500/10 rounded-lg p-4 shadow-sm">
                       <p className="text-emerald-300 text-sm font-semibold mb-3">S&S ISA</p>
                       <div className="space-y-2 text-xs">
                         <div className="flex justify-between">

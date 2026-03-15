@@ -697,6 +697,15 @@ export default function Home() {
       <NewsTicker />
       <FinanceNews />
 
+      {/* Cathedral Image Section */}
+      <div className="w-full h-96 md:h-[500px] overflow-hidden">
+        <img
+          src="/cathedral.jpg"
+          alt="London financial district"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
       {/* Feature Section - Why It Pays to Invest */}
       <div className="py-24 px-4 bg-gradient-to-b from-black to-slate-950 border-t border-white/10 chart-section" ref={chartSectionRef}>
         <div className="max-w-6xl mx-auto">

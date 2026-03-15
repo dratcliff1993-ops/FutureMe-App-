@@ -128,12 +128,20 @@ export default function SelfAssessment() {
       </header>
 
       {/* Hero Section */}
-      <div className="relative w-full pt-20 pb-16 bg-gradient-to-b from-slate-50 to-white border-b border-gray-200">
+      <div className="relative w-full pt-20 pb-16 overflow-hidden border-b border-gray-200">
+        <div className="absolute inset-0">
+          <img
+            src="/self-assessment-hero.jpg"
+            alt="Self Assessment"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/80"></div>
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="max-w-7xl mx-auto px-6 flex flex-col items-center justify-center text-center"
+          className="relative max-w-7xl mx-auto px-6 flex flex-col items-center justify-center text-center"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Self Assessment Made Simple</h1>
           <p className="text-lg text-gray-600 max-w-2xl">
@@ -205,6 +213,21 @@ export default function SelfAssessment() {
           </div>
         </motion.div>
 
+        {/* Image Break - Digital Tools */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="my-16"
+        >
+          <img
+            src="/self-assessment-tablet.jpg"
+            alt="Digital record keeping"
+            className="w-full h-80 object-cover rounded-2xl shadow-sm"
+          />
+        </motion.div>
+
         {/* Key Deadlines */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -231,6 +254,21 @@ export default function SelfAssessment() {
               <p className="text-gray-600 text-xs">Last day to file online return and pay tax in full. Second payment on account due.</p>
             </div>
           </div>
+        </motion.div>
+
+        {/* Image Break - Small Business */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+          className="my-16"
+        >
+          <img
+            src="/self-assessment-coffee.jpg"
+            alt="Small business owner"
+            className="w-full h-80 object-cover rounded-2xl shadow-sm"
+          />
         </motion.div>
 
         {/* Allowable Expenses */}

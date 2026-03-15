@@ -697,18 +697,11 @@ export default function Home() {
       <NewsTicker />
       <FinanceNews />
 
-      {/* Cathedral Image Section */}
-      <div className="w-full h-96 md:h-[500px] overflow-hidden">
-        <img
-          src="/cathedral.jpg"
-          alt="London financial district"
-          className="w-full h-full object-cover"
-        />
-      </div>
-
       {/* Feature Section - Why It Pays to Invest */}
-      <div className="py-24 px-4 bg-gradient-to-b from-black to-slate-950 border-t border-white/10 chart-section" ref={chartSectionRef}>
-        <div className="max-w-6xl mx-auto">
+      <div className="py-24 px-4 chart-section relative" ref={chartSectionRef} style={{backgroundImage: 'url(/cathedral.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/70"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-3">Why it pays to invest</h2>
             <p className="text-base text-white/70 max-w-3xl mx-auto leading-relaxed">

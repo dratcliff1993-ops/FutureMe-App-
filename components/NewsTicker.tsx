@@ -38,10 +38,11 @@ export default function NewsTicker() {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('/api/news');
+        const response = await fetch('/api/news-stream');
         const data = await response.json();
-        if (data.articles && data.articles.length > 0) {
-          const formattedNews = data.articles.map((article: any) => {
+
+        if (Array.isArray(data) && data.length > 0) {
+          const formattedNews = data.map((article: any) => {
             const date = new Date(article.publishedAt);
             const now = new Date();
             const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
@@ -53,7 +54,7 @@ export default function NewsTicker() {
             return {
               id: article.id || article.title,
               title: article.title,
-              source: article.source,
+              source: article.source || 'News',
               publishedAt: timeAgo,
               url: article.url
             };

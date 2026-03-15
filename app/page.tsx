@@ -446,15 +446,6 @@ export default function Home() {
 
   const navItems = [
     {
-      label: 'Finances',
-      items: [
-        { title: 'Student Loans', href: '#' },
-        { title: 'Plan 1 & 2', href: '#' },
-        { title: 'Plan 4 & 5', href: '#' },
-        { title: 'Repayment Calculator', href: '#' },
-      ],
-    },
-    {
       label: 'Savings',
       items: [
         { title: 'Cash ISAs', href: '#' },

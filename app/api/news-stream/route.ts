@@ -10,7 +10,7 @@ export async function GET(request: Request) {
       });
     }
 
-    const newsUrl = `https://api.worldnewsapi.com/search-news?text=stock%20market%20OR%20financial%20news%20OR%20banking%20OR%20investment%20OR%20economy%20OR%20cryptocurrency%20OR%20forex&number=10&sort=publish_date`;
+    const newsUrl = `https://api.worldnewsapi.com/search-news?text=business&number=50`;
     console.log('Fetching from World News API...');
 
     const response = await fetch(newsUrl, {
@@ -39,7 +39,15 @@ export async function GET(request: Request) {
       });
     }
 
-    const articles = data.news.map((article: any) => ({
+    // Finance keywords for filtering
+    const financeKeywords = ['finance', 'stock', 'market', 'invest', 'bank', 'crypto', 'forex', 'trading', 'economy', 'earnings', 'dividend', 'bond', 'fund', 'portfolio', 'bullish', 'bearish', 'nasdaq', 'ftse', 'dow', 'bitcoin', 'ethereum', 'payment', 'mortgage', 'loan', 'interest', 'inflation', 'recession', 'bull', 'bear', 'ipo', 'merger', 'acquisition', 'wealth', 'pension', 'ira', '401k'];
+
+    const filteredNews = data.news.filter((article: any) => {
+      const text = `${article.title} ${article.summary || ''}`.toLowerCase();
+      return financeKeywords.some(keyword => text.includes(keyword));
+    }).slice(0, 6);
+
+    const articles = filteredNews.map((article: any) => ({
       id: article.id.toString(),
       title: article.title,
       description: article.summary || article.text?.substring(0, 150),

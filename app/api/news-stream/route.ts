@@ -56,24 +56,20 @@ export async function GET(request: Request) {
         );
       };
 
-      // Send initial cached news if available
-      if (cachedNews.length > 0) {
-        sendNews(cachedNews);
-      } else {
-        // Fetch initial news
-        const initialNews = await fetchLatestNews();
-        if (initialNews.length > 0) {
-          cachedNews = initialNews;
-          sendNews(initialNews);
-        }
+      // Fetch and send initial news immediately
+      const initialNews = await fetchLatestNews();
+      if (initialNews.length > 0) {
+        sendNews(initialNews);
       }
+
+      let currentNews = initialNews;
 
       // Set up interval to fetch new news every 10 seconds
       const interval = setInterval(async () => {
         const newNews = await fetchLatestNews();
 
-        if (newNews.length > 0 && hasNewsChanged(newNews, cachedNews)) {
-          cachedNews = newNews;
+        if (newNews.length > 0 && hasNewsChanged(newNews, currentNews)) {
+          currentNews = newNews;
           sendNews(newNews);
         }
       }, 10000);

@@ -1,10 +1,9 @@
-async function fetchLatestNews() {
+export async function GET(request: Request) {
   try {
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
 
     if (!apiKey) {
-      console.error('NewsAPI key not configured');
-      return [];
+      return new Response('API key not configured', { status: 500 });
     }
 
     const response = await fetch(
@@ -12,18 +11,12 @@ async function fetchLatestNews() {
     );
 
     if (!response.ok) {
-      console.error('NewsAPI response not ok:', response.status);
-      return [];
+      return new Response('NewsAPI request failed', { status: 502 });
     }
 
     const data = await response.json();
 
-    if (!data.articles || data.articles.length === 0) {
-      console.error('No articles returned from NewsAPI');
-      return [];
-    }
-
-    return data.articles.map((article: any) => ({
+    const articles = (data.articles || []).map((article: any) => ({
       id: article.url,
       title: article.title,
       description: article.description,
@@ -32,39 +25,22 @@ async function fetchLatestNews() {
       imageUrl: article.urlToImage,
       publishedAt: article.publishedAt
     }));
+
+    // Return as JSON, not SSE format
+    return new Response(JSON.stringify(articles), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
   } catch (error) {
-    console.error('News fetch error:', error);
-    return [];
+    console.error('News API error:', error);
+    return new Response(JSON.stringify([]), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
-}
-
-export async function GET(request: Request) {
-  const responseStream = new ReadableStream({
-    async start(controller) {
-      try {
-        const news = await fetchLatestNews();
-
-        if (news.length > 0) {
-          controller.enqueue(`data: ${JSON.stringify(news)}\n\n`);
-        } else {
-          controller.enqueue(`data: ${JSON.stringify([])}\n\n`);
-        }
-
-        // Close the stream after sending
-        controller.close();
-      } catch (error) {
-        console.error('Stream error:', error);
-        controller.close();
-      }
-    },
-  });
-
-  return new Response(responseStream, {
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
-    },
-  });
 }

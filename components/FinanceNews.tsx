@@ -44,24 +44,19 @@ export default function FinanceNews() {
     const fetchNews = async () => {
       try {
         const response = await fetch('/api/news-stream');
-        const text = await response.text();
+        const articles = await response.json();
 
-        // Parse SSE format
-        const match = text.match(/data: (.*)/);
-        if (match && match[1]) {
-          const articles = JSON.parse(match[1]);
-          if (articles && articles.length > 0) {
-            const formattedNews = articles.map((article: any) => ({
-              id: article.id || article.title,
-              title: article.title,
-              description: article.description,
-              source: article.source,
-              url: article.url,
-              imageUrl: article.imageUrl,
-              publishedAt: formatTimeAgo(article.publishedAt)
-            }));
-            setNews(formattedNews);
-          }
+        if (Array.isArray(articles) && articles.length > 0) {
+          const formattedNews = articles.map((article: any) => ({
+            id: article.id || article.title,
+            title: article.title,
+            description: article.description,
+            source: article.source,
+            url: article.url,
+            imageUrl: article.imageUrl,
+            publishedAt: formatTimeAgo(article.publishedAt)
+          }));
+          setNews(formattedNews);
         }
       } catch (error) {
         console.error('Failed to fetch news:', error);
@@ -71,8 +66,8 @@ export default function FinanceNews() {
     // Fetch news immediately
     fetchNews();
 
-    // Refetch every 30 seconds
-    const interval = setInterval(fetchNews, 30000);
+    // Refetch every 5 minutes
+    const interval = setInterval(fetchNews, 300000);
 
     return () => clearInterval(interval);
   }, []);

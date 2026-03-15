@@ -1,24 +1,29 @@
-let cachedNews: any[] = [];
-let lastFetchTime = 0;
-let isFetching = false;
-
 async function fetchLatestNews() {
-  if (isFetching) return;
-
   try {
-    isFetching = true;
     const apiKey = process.env.NEXT_PUBLIC_NEWSAPI_KEY;
+
+    if (!apiKey) {
+      console.error('NewsAPI key not configured');
+      return [];
+    }
 
     const response = await fetch(
       `https://newsapi.org/v2/top-headlines?country=gb&category=business&pageSize=6&apiKey=${apiKey}`
     );
 
     if (!response.ok) {
-      throw new Error('NewsAPI request failed');
+      console.error('NewsAPI response not ok:', response.status);
+      return [];
     }
 
     const data = await response.json();
-    const newArticles = data.articles.map((article: any) => ({
+
+    if (!data.articles || data.articles.length === 0) {
+      console.error('No articles returned from NewsAPI');
+      return [];
+    }
+
+    return data.articles.map((article: any) => ({
       id: article.url,
       title: article.title,
       description: article.description,
@@ -27,58 +32,30 @@ async function fetchLatestNews() {
       imageUrl: article.urlToImage,
       publishedAt: article.publishedAt
     }));
-
-    return newArticles;
   } catch (error) {
-    console.error('News API error:', error);
+    console.error('News fetch error:', error);
     return [];
-  } finally {
-    isFetching = false;
   }
-}
-
-function hasNewsChanged(newNews: any[], oldNews: any[]): boolean {
-  if (newNews.length !== oldNews.length) return true;
-
-  for (let i = 0; i < newNews.length; i++) {
-    if (newNews[i].id !== oldNews[i].id) return true;
-  }
-
-  return false;
 }
 
 export async function GET(request: Request) {
   const responseStream = new ReadableStream({
     async start(controller) {
-      const sendNews = (news: any[]) => {
-        controller.enqueue(
-          `data: ${JSON.stringify(news)}\n\n`
-        );
-      };
+      try {
+        const news = await fetchLatestNews();
 
-      // Fetch and send initial news immediately
-      const initialNews = await fetchLatestNews();
-      if (initialNews.length > 0) {
-        sendNews(initialNews);
-      }
-
-      let currentNews = initialNews;
-
-      // Set up interval to fetch new news every 10 seconds
-      const interval = setInterval(async () => {
-        const newNews = await fetchLatestNews();
-
-        if (newNews.length > 0 && hasNewsChanged(newNews, currentNews)) {
-          currentNews = newNews;
-          sendNews(newNews);
+        if (news.length > 0) {
+          controller.enqueue(`data: ${JSON.stringify(news)}\n\n`);
+        } else {
+          controller.enqueue(`data: ${JSON.stringify([])}\n\n`);
         }
-      }, 10000);
 
-      // Clean up on connection close
-      request.signal.addEventListener('abort', () => {
-        clearInterval(interval);
+        // Close the stream after sending
         controller.close();
-      });
+      } catch (error) {
+        console.error('Stream error:', error);
+        controller.close();
+      }
     },
   });
 

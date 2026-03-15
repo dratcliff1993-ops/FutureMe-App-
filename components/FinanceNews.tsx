@@ -41,36 +41,40 @@ export default function FinanceNews() {
   };
 
   useEffect(() => {
-    // Connect to SSE stream for real-time news updates
-    const eventSource = new EventSource('/api/news-stream');
-
-    eventSource.onmessage = (event) => {
+    const fetchNews = async () => {
       try {
-        const articles = JSON.parse(event.data);
-        if (articles && articles.length > 0) {
-          const formattedNews = articles.map((article: any) => ({
-            id: article.id || article.title,
-            title: article.title,
-            description: article.description,
-            source: article.source,
-            url: article.url,
-            imageUrl: article.imageUrl,
-            publishedAt: formatTimeAgo(article.publishedAt)
-          }));
-          setNews(formattedNews);
+        const response = await fetch('/api/news-stream');
+        const text = await response.text();
+
+        // Parse SSE format
+        const match = text.match(/data: (.*)/);
+        if (match && match[1]) {
+          const articles = JSON.parse(match[1]);
+          if (articles && articles.length > 0) {
+            const formattedNews = articles.map((article: any) => ({
+              id: article.id || article.title,
+              title: article.title,
+              description: article.description,
+              source: article.source,
+              url: article.url,
+              imageUrl: article.imageUrl,
+              publishedAt: formatTimeAgo(article.publishedAt)
+            }));
+            setNews(formattedNews);
+          }
         }
       } catch (error) {
-        console.error('Failed to parse news:', error);
+        console.error('Failed to fetch news:', error);
       }
     };
 
-    eventSource.onerror = (error) => {
-      console.error('News stream error:', error);
-      eventSource.close();
-    };
+    // Fetch news immediately
+    fetchNews();
 
-    // Clean up connection on unmount
-    return () => eventSource.close();
+    // Refetch every 30 seconds
+    const interval = setInterval(fetchNews, 30000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (

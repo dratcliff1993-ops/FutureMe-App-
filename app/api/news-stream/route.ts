@@ -68,7 +68,7 @@ export async function GET(request: Request) {
         }
       }
 
-      // Set up interval to fetch new news every 30 seconds
+      // Set up interval to fetch new news every 10 seconds
       const interval = setInterval(async () => {
         const newNews = await fetchLatestNews();
 
@@ -76,7 +76,7 @@ export async function GET(request: Request) {
           cachedNews = newNews;
           sendNews(newNews);
         }
-      }, 30000);
+      }, 10000);
 
       // Clean up on connection close
       request.signal.addEventListener('abort', () => {
